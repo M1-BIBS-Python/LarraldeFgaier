@@ -23,14 +23,18 @@ class Residual(dict):
             item: either an atom_id (`int`) or an `Atom` object
                 to check if present within the residual.
         """
-        if isinstance(item, Atom):
+        if isinstance(item, six.text_type):
             return super(Residual, self).__contains__(item)
+        elif isinstance(item, Atom):
+            return any(item==atom for atom in self.itervalues())
         elif isinstance(item, int):
             return any(item == atom.id for atom in self.itervalues())
+
         else:
             raise TypeError(
-                "'in <Residual>' requires Atom or unicode"
-                " as left operand, not {}".format(type(item).__name__)
+                "'in <Residual>' requires Atom or {}"
+                " as left operand, not {}".format(
+                    six.text_type.__name__,type(item).__name__)
             )
 
     def itervalues(self):

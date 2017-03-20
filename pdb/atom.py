@@ -31,6 +31,12 @@ class Atom(object):
     def __repr__(self):
         return "Atom {}({}, {}, {})".format(self.id, self.x, self.y, self.z)
 
+    def __eq__(self, other):
+        return all(
+            getattr(self, attr, None)==getattr(other, attr, None)
+                for attr in ('x', 'y', 'z', 'id')
+        )
+
     def distance_to(self, other):
         if isinstance(other, Atom):
             return numpy.linalg.norm(self.pos - other.pos)
