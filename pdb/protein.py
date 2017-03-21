@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 import collections
 import six
+import copy
 import numpy
 
 from .parser import parse_pdb_atom_line
@@ -83,6 +84,17 @@ class Protein(collections.OrderedDict):
     def iteritems(self):
         return six.iteritems(self)
 
+    def copy(self):
+        """Returns a deep copy of self
+        """
+        return Protein(self.id, self.name, {
+            chain.id: Chain(chain.id, chain.name, {
+                residual.id: copy.deepcopy(residual)
+                    for residual in chain.itervalues()
+            })
+                for chain in self.itervalues()
+        })
+
     @property
     def mass(self):
         return sum(chain.mass for chain in self.itervalues())
@@ -95,13 +107,13 @@ class Protein(collections.OrderedDict):
             for res in chain.itervalues() for atom in res.itervalues()
         )
 
-
     def contact_map(self, other, mode='nearest'):
         """Return a 2D contact map between residuals of `self` and `other`
 
         Arguments:
             other (Protein): the other protein with which to create
-                a contact map
+                a contact map (chains/residuals/atoms must have the same
+                names in both proteins)
 
         Keyword Arguments:
             mode (str): how to compute the contact map. Available methods are:
@@ -127,3 +139,15 @@ class Protein(collections.OrderedDict):
                         cmap[r.id, other_r.id] = self._CMAP_MODES[mode](r, other_r)
 
         return cmap
+
+    @property
+    def radius(self):
+        """The radius of the sphere the protein would fit in
+        """
+        origin = numpy.array([0, 0, 0])
+        return max(
+            atom.distance_to(origin)
+                for chain in self.itervalues()
+                    for residual in chain.itervalues()
+                        for atom in residual.itervalues()
+        )
