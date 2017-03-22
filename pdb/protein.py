@@ -5,13 +5,16 @@ from __future__ import unicode_literals
 import collections
 import six
 import copy
+import gzip
+import functools
+import string
 import numpy
 
+from . import utils
 from .parser import parse_pdb_atom_line
 from .chain import Chain
 from .residual import Residual
 from .atom import Atom
-
 
 
 class Protein(collections.OrderedDict):
@@ -55,9 +58,14 @@ class Protein(collections.OrderedDict):
         """Create a new Protein object from a PDB file.
 
         Arguments:
-            path (str): the path to a PDB protein file.
+            path (str): the path to a PDB protein file (supports gzipped
+                PDB files).
         """
-        with open(path, 'rb') as pdb_file:
+        if path.endswith('.gz'):
+            open_function = gzip.open
+        else:
+            open_function = functools.partial(open, mode='rb')
+        with open_function(path) as pdb_file:
             return cls.from_pdb(pdb_file)
 
     def __init__(self, prot_id=None, prot_name=None, chains=None):
@@ -77,6 +85,25 @@ class Protein(collections.OrderedDict):
                 "'in <Protein>' requires Chain, Residual, Atom or unicode"
                 " as left operand, not {}".format(type(item).__name__)
             )
+
+    def __getitem__(self, item):
+        """Overloaded dict.__getitem__ allowing chain slicing
+
+        Exemple:
+            >>> complex = Protein.from_pdb_file("tests/data/1brs.pdb.gz")
+            >>> barstar = complex['D':]
+            >>> list(barstar.keys())
+            ['D', 'E', 'F']
+        """
+        if isinstance(item, slice):
+            stop = item.stop or utils.nth(utils.infinitewords(max(self.keys())), 1)
+            start = item.start or min(self.keys())
+            return Protein(chains={
+                k:super(Protein, self).__getitem__(k)
+                    for k in utils.infinitewords(start, stop)
+            })
+        else:
+            return super(Protein, self).__getitem__(item)
 
     def itervalues(self):
         return six.itervalues(self)
@@ -143,11 +170,22 @@ class Protein(collections.OrderedDict):
     @property
     def radius(self):
         """The radius of the sphere the protein would fit in
+
+        Equals to the norm of the position of the atom of the protein farthest
+        from its mass center.
         """
-        origin = numpy.array([0, 0, 0])
+        origin = self.mass_center
         return max(
             atom.distance_to(origin)
                 for chain in self.itervalues()
                     for residual in chain.itervalues()
                         for atom in residual.itervalues()
+        )
+
+    def nearest_atom(self, pos):
+        """Returns the atom nearest to the position `pos`
+        """
+        return min(
+            (atom for chain in self.values() for res in chain.values() for atom in res.values()),
+            key = lambda a: a.distance_to(pos)
         )

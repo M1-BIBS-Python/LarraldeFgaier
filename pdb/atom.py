@@ -38,6 +38,12 @@ class Atom(object):
         )
 
     def distance_to(self, other):
+        """Computes the distance to ``other``
+
+        Arguments:
+            other (`Atom` or `numpy.array`): the object or the position
+                to compute the distance to (if array, must be of dimension 3).
+        """
         if isinstance(other, Atom):
             return numpy.linalg.norm(self.pos - other.pos)
         else:
