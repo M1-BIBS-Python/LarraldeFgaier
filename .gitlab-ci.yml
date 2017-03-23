@@ -47,7 +47,7 @@ test:3.6:
 
 ## REPORT COVERAGE
 
-codacy:
+codecov:
   stage: cover
   image: python:alpine
   script:
