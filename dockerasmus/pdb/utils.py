@@ -22,7 +22,6 @@ def infinitewords(start='A', stop=None):
     while True:
         k += 1
         for word in (''.join(x) for x in itertools.product(*[uppercase]*k)):
-            #print(word)
             if word == start:
                 STARTED = True
             if word == stop:

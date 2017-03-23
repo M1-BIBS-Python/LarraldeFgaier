@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 import os
 import unittest
 
-from pdb import Protein, Residual, Atom
+from dockerasmus.pdb import Protein, Residual, Atom
 from .utils import DATADIR
 
 

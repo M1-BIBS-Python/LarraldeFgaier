@@ -6,7 +6,7 @@ import os
 import unittest
 import numpy
 
-from pdb import Protein
+from dockerasmus.pdb import Protein
 from .utils import DATADIR
 
 class TestParserOnArginine(unittest.TestCase):
