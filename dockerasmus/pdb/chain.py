@@ -30,11 +30,12 @@ class Chain(collections.OrderedDict):
                 " as left operand, not {}".format(type(item).__name__)
             )
 
-    def itervalues(self):
-        return six.itervalues(self)
+    if six.PY3:
+        def itervalues(self):
+            return six.itervalues(self)
 
-    def iteritems(self):
-        return six.iteritems(self)
+        def iteritems(self):
+            return six.iteritems(self)
 
     @property
     def mass(self):

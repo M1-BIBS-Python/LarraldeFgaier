@@ -11,7 +11,6 @@ import string
 import numpy
 
 from . import utils
-from .parser import parse_pdb_atom_line
 from .chain import Chain
 from .residual import Residual
 from .atom import Atom
@@ -40,7 +39,7 @@ class Protein(collections.OrderedDict):
         for line in handle:
             if line.startswith(b"ATOM  "):
 
-                atom = parse_pdb_atom_line(line)
+                atom = utils.parse_pdb_atom_line(line)
 
                 if not atom['chainID'] in protein:
                     protein[atom['chainID']] = Chain(atom['chainID'])
@@ -105,11 +104,12 @@ class Protein(collections.OrderedDict):
         else:
             return super(Protein, self).__getitem__(item)
 
-    def itervalues(self):
-        return six.itervalues(self)
+    if six.PY3:
+        def itervalues(self):
+            return six.itervalues(self)
 
-    def iteritems(self):
-        return six.iteritems(self)
+        def iteritems(self):
+            return six.iteritems(self)
 
     def copy(self):
         """Returns a deep copy of self

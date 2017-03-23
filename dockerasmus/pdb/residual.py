@@ -37,15 +37,16 @@ class Residual(dict):
                     six.text_type.__name__,type(item).__name__)
             )
 
-    def itervalues(self):
-        """Return an iterator over the atoms of the residual.
-        """
-        return six.itervalues(self)
+    if six.PY3:
+        def itervalues(self):
+            """Return an iterator over the atoms of the residual.
+            """
+            return six.itervalues(self)
 
-    def iteritems(self):
-        """Return an iterator over the (atom_id, atom) pairs of the residual.
-        """
-        return six.iteritems(self)
+        def iteritems(self):
+            """Return an iterator over the (atom_id, atom) pairs of the residual.
+            """
+            return six.iteritems(self)
 
     @property
     def mass(self):
