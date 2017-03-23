@@ -39,13 +39,9 @@ class Residual(dict):
 
     if six.PY3:
         def itervalues(self):
-            """Return an iterator over the atoms of the residual.
-            """
             return six.itervalues(self)
 
         def iteritems(self):
-            """Return an iterator over the (atom_id, atom) pairs of the residual.
-            """
             return six.iteritems(self)
 
     @property
@@ -70,12 +66,9 @@ class Residual(dict):
     def distance_to(self, other):
         """The distance of the mass_center of the residual to `other`
         """
-        if isinstance(other, Atom):
-            return numpy.linalg.norm(self.mass_center - other.pos)
-        elif isinstance(other, Residual):
-            return numpy.linalg.norm(self.mass_center - other.mass_center)
-        else:
-            return numpy.linalg.norm(self.mass_center - other)
+        if len(other) != 3:
+            raise ValueError("")
+        return numpy.linalg.norm(self.mass_center - other)
 
     def rmsd(self, ref):
         """The RMSD of the atoms of the residual, with ref as reference.

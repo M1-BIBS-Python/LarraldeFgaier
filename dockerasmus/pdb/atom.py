@@ -2,17 +2,14 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
+import six
 import numpy
 
 
 class Atom(object):
 
     _atomic_mass = {
-        'C': 12.0107,
-        'H': 1.00794,
-        'N': 14.0067,
-        'O': 15.9994,
-        'S': 32.065,
+        'C': 12.0107, 'H': 1.00794, 'N': 14.0067, 'O': 15.9994, 'S': 32.065,
     }
 
     def __init__(self, x, y, z, atom_id, atom_name=None):
@@ -37,17 +34,23 @@ class Atom(object):
                 for attr in ('x', 'y', 'z', 'id')
         )
 
+    if six.PY3:
+        def itervalues(self):
+            return six.itervalues(self)
+
+        def iteritems(self):
+            return six.iteritems(self)
+
     def distance_to(self, other):
         """Computes the distance to ``other``
 
         Arguments:
-            other (`Atom` or `numpy.array`): the object or the position
-                to compute the distance to (if array, must be of dimension 3).
+            other (numpy.array): the position to compute the
+                distance to (must be array-like of dimension 3)
         """
-        if isinstance(other, Atom):
-            return numpy.linalg.norm(self.pos - other.pos)
-        else:
-            return numpy.linalg.norm(self.pos - other)
+        if len(other) != 3:
+            raise ValueError("")
+        return numpy.linalg.norm(self.pos - other)
 
     @property
     def mass(self):
@@ -55,5 +58,4 @@ class Atom(object):
         """
         if self.name is None:
             raise ValueError("Cannot find atom type !")
-        else:
-            return self._atomic_mass[self.name[0]]
+        return self._atomic_mass[self.name[0]]

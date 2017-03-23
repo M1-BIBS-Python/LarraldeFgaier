@@ -19,10 +19,10 @@ from .atom import Atom
 class Protein(collections.OrderedDict):
 
     _CMAP_MODES = {
-        'mass_center': lambda r1,r2: r1.distance_to(r2),
-        'nearest': lambda r1, r2: min(a1.distance_to(a2)
+        'mass_center': lambda r1,r2: r1.distance_to(r2.mass_center),
+        'nearest': lambda r1, r2: min(a1.distance_to(a2.pos)
                 for a1 in r1.itervalues() for a2 in r2.itervalues()),
-        'farthest': lambda r1, r2: max(a1.distance_to(a2)
+        'farthest': lambda r1, r2: max(a1.distance_to(a2.pos)
                 for a1 in r1.itervalues() for a2 in r2.itervalues()),
     }
 
