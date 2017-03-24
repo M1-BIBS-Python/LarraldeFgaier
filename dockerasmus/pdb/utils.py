@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import itertools
+import functools
 import string
 
 
@@ -31,8 +32,6 @@ def parse_pdb_atom_line(line):
     }
 
 
-
-
 def infinitewords(start='A', stop=None):
     """An infinite word iterator in alphabetic order.
 
@@ -58,3 +57,15 @@ def nth(iterable, n, default=None):
         """Returns the nth item of an interator or a default value
         """
         return next(itertools.islice(iterable, n, None), default)
+
+
+def method_requires(attributes, msg):
+    def decorator(func):
+        @functools.wraps(func)
+        def new_func(self, *args, **kwargs):
+            for attr in attributes:
+                if getattr(self, attr, None) is None:
+                    raise ValueError(msg)
+            return func(self, *args, **kwargs)
+        return new_func
+    return decorator

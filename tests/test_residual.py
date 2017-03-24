@@ -23,9 +23,9 @@ class TestProperties(TestResidual):
     def test_mass_center(self):
         # Actual mass center were calculated manually using AARG
         # as the reference position of the atoms.
-        self.assertAlmostEqual(self.arginine.mass_center[0], 12.7553463, 6)
-        self.assertAlmostEqual(self.arginine.mass_center[1], 85.3782219, 6)
-        self.assertAlmostEqual(self.arginine.mass_center[2], 91.9007537, 6)
+        self.assertAlmostEqual(self.arginine.mass_center[0], 12.7554067, 6)
+        self.assertAlmostEqual(self.arginine.mass_center[1], 85.3782889, 6)
+        self.assertAlmostEqual(self.arginine.mass_center[2], 91.9005718, 6)
 
 
 class TestContains(TestResidual):

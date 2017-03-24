@@ -4,20 +4,21 @@ from __future__ import unicode_literals
 
 import six
 import numpy
+import functools
+
+from .. import constants
+from .utils import method_requires
 
 
 class Atom(object):
 
-    _atomic_mass = {
-        'C': 12.0107, 'H': 1.00794, 'N': 14.0067, 'O': 15.9994, 'S': 32.065,
-    }
-
-    def __init__(self, x, y, z, atom_id, atom_name=None):
+    def __init__(self, x, y, z, atom_id, atom_name=None, residual=None):
         self.id = atom_id
         self.name = atom_name
         self.x = x
         self.y = y
         self.z = z
+        self.residual = residual
 
     @property
     def pos(self):
@@ -49,13 +50,27 @@ class Atom(object):
                 distance to (must be array-like of dimension 3)
         """
         if len(other) != 3:
-            raise ValueError("")
+            raise ValueError
         return numpy.linalg.norm(self.pos - other)
 
     @property
+    @method_requires(["name"], "Cannot find atom type !")
     def mass(self):
         """The mass of the atom
         """
-        if self.name is None:
-            raise ValueError("Cannot find atom type !")
-        return self._atomic_mass[self.name[0]]
+        return constants.ATOMIC_MASSES[self.name[0]]
+
+    @property
+    @method_requires(["name", "residual"], "Cannot find atom type !")
+    def epsilon(self):
+        return constants.AMINOACID_EPSILON[self.residual][self.name]
+
+    @property
+    @method_requires(["name", "residual"], "Cannot find atom type !")
+    def radius(self):
+        return constants.AMINOACID_RADIUS[self.residual][self.name]
+
+    @property
+    @method_requires(["name", "residual"], "Cannot find atom type !")
+    def charge(self):
+        return constants.AMINOACID_CHARGES[self.residual][self.name]

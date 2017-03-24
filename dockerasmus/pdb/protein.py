@@ -48,7 +48,7 @@ class Protein(collections.OrderedDict):
                     protein[atom['chainID']][atom['resSeq']] = Residual(atom['resSeq'], atom['resName'])
 
                 protein[atom['chainID']][atom['resSeq']][atom['name']] = Atom(
-                    atom['x'], atom['y'], atom['z'], atom['serial'], atom['name'],
+                    atom['x'], atom['y'], atom['z'], atom['serial'], atom['name'], atom['resName'][-3:],
                 )
         return protein
 
