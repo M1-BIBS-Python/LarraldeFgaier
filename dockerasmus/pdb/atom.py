@@ -20,6 +20,11 @@ class Atom(object):
         self.z = z
         self.residual = residual
 
+        # Patch Histidine with proper name
+        if self.residual is not None and self.residual.name == "HIS":
+            self.residual.name = "HID" if "HD1" in self.residual else "HIE"
+
+
     @property
     def pos(self):
         """The position of the atom
@@ -61,16 +66,25 @@ class Atom(object):
         return constants.ATOMIC_MASSES[self.name[0]]
 
     @property
-    @method_requires(["name", "residual"], "Cannot find atom type !")
     def epsilon(self):
-        return constants.AMINOACID_EPSILON[self.residual][self.name]
+        return self._read_from_constants(constants.AMINOACID_EPSILON)
 
     @property
-    @method_requires(["name", "residual"], "Cannot find atom type !")
     def radius(self):
-        return constants.AMINOACID_RADIUS[self.residual][self.name]
+        return self._read_from_constants(constants.AMINOACID_RADIUS)
 
     @property
-    @method_requires(["name", "residual"], "Cannot find atom type !")
     def charge(self):
-        return constants.AMINOACID_CHARGES[self.residual][self.name]
+        return self._read_from_constants(constants.AMINOACID_CHARGES)
+
+    @method_requires(["name", "residual"], "Cannot find atom type !")
+    def _read_from_constants(self, table):
+        try:
+            return table[self.residual.name][self.name]
+        except KeyError:
+            if self.residual.nter:
+                return table["NTER"][self.name]
+            elif self.residual.cter:
+                return table["CTER"][self.name]
+            else:
+                raise

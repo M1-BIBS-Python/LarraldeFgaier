@@ -11,6 +11,9 @@ from .atom import Atom
 
 class Residual(dict):
 
+    CTER_ATOMS = frozenset({"OXT"})
+    NTER_ATOMS = frozenset({"H1", "H2", "H3"})
+
     def __init__(self, id, name=None, atoms=None):
         super(Residual, self).__init__(atoms or {})
         self.id = id
@@ -62,6 +65,14 @@ class Residual(dict):
         """
         mass = self.mass
         return sum((atom.mass/mass)*atom.pos for atom in self.itervalues())
+
+    @property
+    def cter(self):
+        return not self.CTER_ATOMS.isdisjoint(self)
+
+    @property
+    def nter(self):
+        return not self.NTER_ATOMS.isdisjoint(self)
 
     def distance_to(self, other):
         """The distance of the mass_center of the residual to `other`
