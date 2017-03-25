@@ -97,10 +97,10 @@ class Protein(collections.OrderedDict):
         with open_function(path) as pdb_file:
             return cls.from_pdb(pdb_file)
 
-    def __init__(self, prot_id=None, prot_name=None, chains=None):
+    def __init__(self, id=None, name=None, chains=None):
         super(Protein, self).__init__(chains or {})
-        self.id = prot_id
-        self.name = prot_name
+        self.id = id
+        self.name = name
 
     def __contains__(self, item):
         if isinstance(item, Chain):
@@ -120,15 +120,15 @@ class Protein(collections.OrderedDict):
 
         Exemple:
             >>> complex = Protein.from_pdb_file("tests/data/1brs.pdb.gz")
-            >>> barstar = complex['D':]
-            >>> list(barstar.keys())
-            ['D', 'E', 'F']
+            >>> barstar = complex[u'D':]
+            >>> sorted(barstar.keys())
+            [u'D', u'E', u'F']
             >>> complex[1]
             Atom 1(16.783, 48.812, 26.447)
             >>> barstar[1]
             Traceback (most recent call last):
-              ...
-            KeyError: 'Could not find Atom with id: 1'
+               ...
+            KeyError: u'Could not find Atom with id: 1'
 
         """
         if isinstance(item, slice):

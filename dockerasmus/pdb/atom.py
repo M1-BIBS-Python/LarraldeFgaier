@@ -12,9 +12,9 @@ from ..utils.decorators import method_requires
 
 class Atom(object):
 
-    def __init__(self, x, y, z, atom_id, atom_name=None, residual=None):
-        self.id = atom_id
-        self.name = atom_name
+    def __init__(self, x, y, z, id, name=None, residual=None):
+        self.id = id
+        self.name = name
         self.x = x
         self.y = y
         self.z = z

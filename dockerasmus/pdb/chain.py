@@ -12,10 +12,10 @@ from .atom import Atom
 
 class Chain(collections.OrderedDict):
 
-    def __init__(self, chain_id, chain_name=None, residuals=None):
+    def __init__(self, id, name=None, residuals=None):
         super(Chain, self).__init__(residuals or [])
-        self.id = chain_id
-        self.name = chain_name
+        self.id = id
+        self.name = name
 
     def __contains__(self, item):
         if isinstance(item, Residual):

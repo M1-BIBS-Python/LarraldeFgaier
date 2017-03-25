@@ -11,10 +11,10 @@ from .atom import Atom
 
 class Residual(dict):
 
-    def __init__(self, res_id, res_name=None, atoms=None):
+    def __init__(self, id, name=None, atoms=None):
         super(Residual, self).__init__(atoms or {})
-        self.id = res_id
-        self.name = res_name
+        self.id = id
+        self.name = name
 
     def __contains__(self, item):
         """Checks if `item` is contained in the residual.
