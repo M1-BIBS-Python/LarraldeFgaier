@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 import itertools
 import string
+import six
 
 
 def wordrange(start='A', stop=None):
@@ -15,13 +16,11 @@ def wordrange(start='A', stop=None):
         AA
         AB
     """
+    # TODO: check that stop can actually be reached
     STARTED = False
     uppercase = string.ascii_uppercase
     if six.PY2:
         uppercase = uppercase.decode('utf-8')
-
-    if stop is not None and start > stop:
-        return
 
     for k in itertools.count(start=1):
         for word in (''.join(x) for x in itertools.product(*[uppercase]*k)):

@@ -23,3 +23,9 @@ class TestInfiniteWords(unittest.TestCase):
 class TestNth(unittest.TestCase):
 
     def test_behaviour(self):
+        self.assertEqual(iterators.nth(range(10), 2), 2)
+        self.assertEqual(iterators.nth(range(2, 10), 3), 5)
+
+    def test_default(self):
+        self.assertIs(iterators.nth(range(10), 11), None)
+        self.assertEqual(iterators.nth(range(10), 11, 'default'), 'default')

@@ -13,10 +13,13 @@ import doctest
 import re
 import warnings
 
+import numpy
 import dockerasmus
 
 
 class IgnoreUnicodeChecker(doctest.OutputChecker):
+    """A checker that removes the 'u' string prefix from expected results
+    """
     def check_output(self, want, got, optionflags):
         if sys.version_info[0] > 2:
             want = re.sub("u'(.*?)'", "'\\1'", want)
@@ -45,20 +48,22 @@ def load_tests(loader, tests, ignore):
 
     def _setUp(self):
         """setUp method used by the DocTestSuite"""
-        pass
+        numpy.set_printoptions(precision=3)
 
     def _tearDown(self):
         """tearDown method used by the DocTestSuite"""
         pass
 
     globs = {
-        # globs for dockerasmus
+        # generic modules
         'dockerasmus': dockerasmus,
+        'numpy': numpy,
 
         # globs for dockerasmus.utils
         'nth': dockerasmus.utils.iterators.nth,
         'wordrange': dockerasmus.utils.iterators.wordrange,
         'method_requires': dockerasmus.utils.decorators.method_requires,
+        'distance': dockerasmus.utils.matrices.distance,
 
         # globs for pdb:
         'Protein': dockerasmus.pdb.Protein,
