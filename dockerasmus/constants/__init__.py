@@ -34,7 +34,7 @@ with open(_CSV.format('aminoacid_charges'), 'rb') as f:
     headers = next(f).decode('utf-8').split(',')[1:]
     AMINOACID_CHARGES = {
         line.split(',')[0]: {
-            atom: charge
+            atom: float(charge)
                 for atom, charge in zip(headers, line.split(',')[1:])
                     if charge
         }
