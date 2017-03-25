@@ -23,7 +23,7 @@ stages:
   script:
   - pip install -U pip setuptools
   - pip install -r requirements-test.txt
-  - python -m green -Rvvtk
+  - python -m coverage run -m unittest discover -v
 
 
 ## TESTS
