@@ -56,9 +56,9 @@ def load_tests(loader, tests, ignore):
         'dockerasmus': dockerasmus,
 
         # globs for dockerasmus.utils
-        'nth': dockerasmus.utils.nth,
-        'infinitewords': dockerasmus.utils.infinitewords,
-        'method_requires': dockerasmus.utils.method_requires,
+        'nth': dockerasmus.utils.iterators.nth,
+        'infinitewords': dockerasmus.utils.iterators.infinitewords,
+        'method_requires': dockerasmus.utils.decorators.method_requires,
 
         # globs for pdb:
         'Protein': dockerasmus.pdb.Protein,

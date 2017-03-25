@@ -10,7 +10,7 @@ import functools
 import string
 import numpy
 
-from .. import utils
+from ..utils import iterators
 from .chain import Chain
 from .residual import Residual
 from .atom import Atom
@@ -132,11 +132,11 @@ class Protein(collections.OrderedDict):
 
         """
         if isinstance(item, slice):
-            stop = item.stop or utils.nth(utils.infinitewords(max(self.keys())), 1)
+            stop = item.stop or iterators.nth(iterators.infinitewords(max(self.keys())), 1)
             start = item.start or min(self.keys())
             return Protein(chains={
                 k:super(Protein, self).__getitem__(k)
-                    for k in utils.infinitewords(start, stop)
+                    for k in iterators.infinitewords(start, stop)
             })
         elif isinstance(item, int):
             atom = next((atom for atom in self.iteratoms() if atom.id==item), None)

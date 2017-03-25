@@ -8,5 +8,4 @@ __version__ = "0.1.0"
 __license__ = "GPLv3"
 
 from . import pdb
-from . import scoring
 from . import utils
