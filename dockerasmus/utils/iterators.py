@@ -6,22 +6,22 @@ import itertools
 import string
 
 
-def infinitewords(start='A', stop=None):
-    """An infinite word iterator in alphabetic order.
+def wordrange(start='A', stop=None):
+    """A word range.
 
     Exemple:
-        >>> for word in infinitewords('AA', 'AC'):
+        >>> for word in wordrange('AA', 'AC'):
         ...     print(word)
         AA
         AB
     """
-    uppercase = string.ascii_uppercase
     STARTED = False
+    uppercase = string.ascii_uppercase
+    if six.PY2:
+        uppercase = uppercase.decode('utf-8')
 
     if stop is not None and start > stop:
-        raise ValueError(
-            "'{}' does not come before '{}' in alphabetic order !".format(start, stop)
-        )
+        return
 
     for k in itertools.count(start=1):
         for word in (''.join(x) for x in itertools.product(*[uppercase]*k)):
