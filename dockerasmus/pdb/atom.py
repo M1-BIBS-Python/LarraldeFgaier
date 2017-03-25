@@ -7,7 +7,7 @@ import numpy
 import functools
 
 from .. import constants
-from .utils import method_requires
+from ..utils import method_requires
 
 
 class Atom(object):

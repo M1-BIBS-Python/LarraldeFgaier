@@ -10,7 +10,7 @@ import functools
 import string
 import numpy
 
-from .utils import parse_pdb_atom_line
+from .. import utils
 from .chain import Chain
 from .residual import Residual
 from .atom import Atom
@@ -26,6 +26,36 @@ class Protein(collections.OrderedDict):
                 for a1 in r1.itervalues() for a2 in r2.itervalues()),
     }
 
+    @staticmethod
+    def _parse_pdb_atom_line(line):
+        """Return a raw `dict` with atom properties from a pdb atom line
+
+        Returns:
+            dict: a dictionary which keys are:
+                * serial
+                * name
+                * chainID
+                * altLoc
+                * resName
+                * resSeq
+                * iCode
+                * x
+                * y
+                * z
+        """
+        schema = {'serial': (6, 11), 'name': (12, 16), 'altLoc': (16, 17),
+                  'resName': (17, 20), 'chainID': (21, 22), 'resSeq': (22, 26),
+                  'iCode': (26, 27), 'x': (30, 38), 'y': (38, 46), 'z': (46, 54)}
+        # Decode a binary string to a unicode/str object
+        decode = lambda s: s.decode('utf-8')
+        # callback to be called after the value field  is isolated from the line,
+        # either to transtype or to decode a binary string
+        callbacks = {'serial': int, 'name': decode, 'altLoc': decode,
+                    'resName': decode, 'chainID': decode, 'resSeq': int,
+                    'iCode': decode, 'x': float, 'y': float, 'z': float}
+        return {key: callbacks.get(key)(line[i:j].strip())
+                for key,(i,j) in schema.items()}
+
     @classmethod
     def from_pdb(cls, handle):
         """Create a new Protein object from a PDB file handle.
@@ -39,7 +69,7 @@ class Protein(collections.OrderedDict):
         for line in handle:
             if line.startswith(b"ATOM  "):
 
-                atom = parse_pdb_atom_line(line)
+                atom = cls._parse_pdb_atom_line(line)
 
                 if not atom['chainID'] in protein:
                     protein[atom['chainID']] = Chain(atom['chainID'])
@@ -86,13 +116,20 @@ class Protein(collections.OrderedDict):
             )
 
     def __getitem__(self, item):
-        """Overloaded dict.__getitem__ allowing chain slicing
+        """Overloaded __getitem__ allowing slicing and individual atom access
 
         Exemple:
             >>> complex = Protein.from_pdb_file("tests/data/1brs.pdb.gz")
             >>> barstar = complex['D':]
             >>> list(barstar.keys())
             ['D', 'E', 'F']
+            >>> complex[1]
+            Atom 1(16.783, 48.812, 26.447)
+            >>> barstar[1]
+            Traceback (most recent call last):
+              ...
+            KeyError: 'Could not find Atom with id: 1'
+
         """
         if isinstance(item, slice):
             stop = item.stop or utils.nth(utils.infinitewords(max(self.keys())), 1)
@@ -101,32 +138,13 @@ class Protein(collections.OrderedDict):
                 k:super(Protein, self).__getitem__(k)
                     for k in utils.infinitewords(start, stop)
             })
+        elif isinstance(item, int):
+            atom = next((atom for atom in self.iteratoms() if atom.id==item), None)
+            if atom is None:
+                raise KeyError("Could not find Atom with id: {}".format(item))
+            return atom
         else:
             return super(Protein, self).__getitem__(item)
-
-    if six.PY3:
-        def itervalues(self):
-            return six.itervalues(self)
-
-        def iteritems(self):
-            return six.iteritems(self)
-
-    def iteratoms(self):
-        for chain in self.itervalues():
-            for residual in chain.itervalues():
-                for atom in residual.itervalues():
-                    yield atom
-
-    def copy(self):
-        """Returns a deep copy of self
-        """
-        return Protein(self.id, self.name, {
-            chain.id: Chain(chain.id, chain.name, {
-                residual.id: copy.deepcopy(residual)
-                    for residual in chain.itervalues()
-            })
-                for chain in self.itervalues()
-        })
 
     @property
     def mass(self):
@@ -138,6 +156,21 @@ class Protein(collections.OrderedDict):
         return sum(
             (atom.mass/mass)*atom.pos for chain in self.itervalues()
             for res in chain.itervalues() for atom in res.itervalues()
+        )
+
+    @property
+    def radius(self):
+        """The radius of the sphere the protein would fit in
+
+        Equals to the norm of the position of the atom of the protein farthest
+        from its mass center.
+        """
+        origin = self.mass_center
+        return max(
+            atom.distance_to(origin)
+                for chain in self.itervalues()
+                    for residual in chain.itervalues()
+                        for atom in residual.itervalues()
         )
 
     def contact_map(self, other, mode='nearest'):
@@ -173,21 +206,6 @@ class Protein(collections.OrderedDict):
 
         return cmap
 
-    @property
-    def radius(self):
-        """The radius of the sphere the protein would fit in
-
-        Equals to the norm of the position of the atom of the protein farthest
-        from its mass center.
-        """
-        origin = self.mass_center
-        return max(
-            atom.distance_to(origin)
-                for chain in self.itervalues()
-                    for residual in chain.itervalues()
-                        for atom in residual.itervalues()
-        )
-
     def nearest_atom(self, pos):
         """Returns the atom nearest to the position `pos`
         """
@@ -195,3 +213,27 @@ class Protein(collections.OrderedDict):
             (atom for chain in self.values() for res in chain.values() for atom in res.values()),
             key = lambda a: a.distance_to(pos)
         )
+
+    if six.PY3:
+        def itervalues(self):
+            return six.itervalues(self)
+
+        def iteritems(self):
+            return six.iteritems(self)
+
+    def iteratoms(self):
+        for chain in self.itervalues():
+            for residual in chain.itervalues():
+                for atom in residual.itervalues():
+                    yield atom
+
+    def copy(self):
+        """Returns a deep copy of self
+        """
+        return Protein(self.id, self.name, {
+            chain.id: Chain(chain.id, chain.name, {
+                residual.id: copy.deepcopy(residual)
+                    for residual in chain.itervalues()
+            })
+                for chain in self.itervalues()
+        })

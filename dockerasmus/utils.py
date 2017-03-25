@@ -18,6 +18,11 @@ def infinitewords(start='A', stop=None):
     uppercase = string.ascii_uppercase
     STARTED = False
 
+    if stop is not None and start > stop:
+        raise ValueError(
+            "'{}' does not come before '{}' in alphabetic order !".format(start, stop)
+        )
+
     for k in itertools.count(start=1):
         for word in (''.join(x) for x in itertools.product(*[uppercase]*k)):
             STARTED |= word == start
@@ -29,6 +34,12 @@ def infinitewords(start='A', stop=None):
 
 def nth(iterable, n, default=None):
     """Returns the nth item of an interator or a default value
+
+    Exemple:
+        >>> nth(range(10), 2)
+        2
+        >>> nth(range(10), 11, "oops")
+        'oops'
     """
     return next(itertools.islice(iterable, n, None), default)
 
