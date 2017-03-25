@@ -19,13 +19,13 @@ class TestParserOnArginine(unittest.TestCase):
         cls.arginine = cls.arginine_prot['A'][-3]
 
     def test_chains(self):
-        self.assertEquals(set(self.arginine_prot.keys()), {'A'})
+        self.assertEqual(set(self.arginine_prot.keys()), {'A'})
 
     def test_residuals(self):
-        self.assertEquals(set(self.arginine_prot['A'].keys()), {-3})
+        self.assertEqual(set(self.arginine_prot['A'].keys()), {-3})
 
     def test_atoms(self):
-        self.assertEquals(
+        self.assertEqual(
             set(self.arginine.keys()),
             {'N', 'CA', 'C', 'O', 'CB', 'CG',
              'CD', 'NE', 'CZ', 'NH1', 'NH2'}
