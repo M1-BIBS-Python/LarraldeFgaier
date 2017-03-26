@@ -10,6 +10,7 @@ from .atom import Atom
 
 
 class Residual(dict):
+    __slots__ = ("id", "_name")
 
     CTER_ATOMS = frozenset({"OXT"})
     NTER_ATOMS = frozenset({"H1", "H2", "H3"})

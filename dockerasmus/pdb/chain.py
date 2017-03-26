@@ -11,6 +11,7 @@ from .atom import Atom
 
 
 class Chain(collections.OrderedDict):
+    __slots__ = ("id", "name")
 
     def __init__(self, id, name=None, residuals=None):
         super(Chain, self).__init__(residuals or [])

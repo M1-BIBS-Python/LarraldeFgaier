@@ -17,6 +17,7 @@ from .atom import Atom
 
 
 class Protein(collections.OrderedDict):
+    __slots__ = ("id", "name")
 
     _CMAP_MODES = {
         'mass_center': lambda r1,r2: r1.distance_to(r2.mass_center),

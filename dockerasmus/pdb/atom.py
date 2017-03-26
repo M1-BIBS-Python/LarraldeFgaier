@@ -11,6 +11,7 @@ from ..utils.decorators import method_requires
 
 
 class Atom(object):
+    __slots__ = ("id", "name", "x", "y", "z", "residual")
 
     def __init__(self, x, y, z, id, name=None, residual=None):
         self.id = id
