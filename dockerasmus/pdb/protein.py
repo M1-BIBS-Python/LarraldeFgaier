@@ -17,7 +17,7 @@ from .atom import Atom
 
 
 class Protein(collections.OrderedDict):
-    __slots__ = ("id", "name")
+    __slots__ = ("id", "name", "_atom_charges")
 
     _CMAP_MODES = {
         'mass_center': lambda r1,r2: r1.distance_to(r2.mass_center),
@@ -103,6 +103,12 @@ class Protein(collections.OrderedDict):
         super(Protein, self).__init__(chains or {})
         self.id = id
         self.name = name
+
+        # Memoize matrices and vectors
+        self._atom_charges = None
+        self._atom_epsilon = None
+        self._atom_positions = None
+        self._atom_radius = None
 
     def __contains__(self, item):
         if isinstance(item, Chain):
@@ -215,6 +221,42 @@ class Protein(collections.OrderedDict):
             (atom for chain in self.values() for res in chain.values() for atom in res.values()),
             key = lambda a: a.distance_to(pos)
         )
+
+    def atom_charges(self):
+        """The vector of the charge of each atom of the protein.
+        """
+        if self._atom_charges is None:
+            self._atom_charges = numpy.array([
+                a.charge for a in self.iteratoms()
+            ])
+        return self._atom_charges
+
+    def atom_epsilon(self):
+        """The vector of the epsilon value of each atom of the protein.
+        """
+        if self._atom_epsilon is None:
+            self._atom_epsilon = numpy.array([
+                a.epsilon for a in self.iteratoms()
+            ])
+        return self._atom_epsilon
+
+    def atom_positions(self):
+        """The matrix of the positions of each atom of the protein.
+        """
+        if self._atom_positions is None:
+            self._atom_positions = numpy.array([
+                a.pos for a in self.iteratoms()
+            ])
+        return self._atom_positions
+
+    def atom_radius(self):
+        """The vector of the Van der Waals radius of each atom of the protein.
+        """
+        if self._atom_radius is None:
+            self._atom_radius = numpy.array([
+                a.radius for a in self.iteratoms()
+            ])
+        return self._atom_radius
 
     if six.PY3:
         def itervalues(self):

@@ -28,16 +28,14 @@ def score(protein1, protein2, diel=65.0):
     # Matrix of Van der Waals
     mx_epsilon = compose(
         lambda e1, e2: numpy.sqrt(e1*e2),
-        numpy.array([a.epsilon for a in protein1.iteratoms()]),
-        numpy.array([a.epsilon for a in protein2.iteratoms()]),
+        protein1.atom_epsilon(), protein2.atom_epsilon()
     )
 
     # Matrix of Van der Waals optimal radius for each aminoacid,
     # to the power of 6
     mx_radius_6 = compose(
         lambda r1, r2: r1+r2,
-        numpy.array([a.radius for a in protein1.iteratoms()]),
-        numpy.array([a.radius for a in protein2.iteratoms()]),
+        protein1.atom_radius(), protein2.atom_radius(),
     )**6
 
     # Matrices A and B from Cornell
@@ -46,16 +44,14 @@ def score(protein1, protein2, diel=65.0):
 
     # Matrix of aminoacid-wise distance
     mx_distance = distance(
-        numpy.array([a.pos for a in protein1.iteratoms()]),
-        numpy.array([a.pos for a in protein2.iteratoms()]),
+        protein1.atom_positions(), protein2.atom_positions(),
     )
     mx_distance_6 = mx_distance**6
 
     # Matrix of aminoacid-wise charge
     mx_q = compose(
         lambda q1, q2: q1*q2,
-        numpy.array([a.charge for a in protein1.iteratoms()]),
-        numpy.array([a.charge for a in protein2.iteratoms()]),
+        protein1.atom_charges(), protein2.atom_charges(),
     )
 
     # Final matrix (using numpy.triu(k=1, ...) means we're only
