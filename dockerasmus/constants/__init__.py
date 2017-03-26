@@ -43,11 +43,11 @@ with open(_CSV.format('aminoacid_charges'), 'rb') as f:
 
 
 with open(_CSV.format('aminoacid_epsilon'), 'rb') as f:
-    _headers = next(f).decode('utf-8').split(',')[1:]
+    headers = next(f).decode('utf-8').strip().split(',')[1:]
     AMINOACID_EPSILON = {
         line.split(',')[0]: {
             atom: ATOMIC_EPSILON[ref]
-                for atom, ref in zip(headers, line.split(',')[1:])
+                for atom, ref in zip(headers, line.strip().split(',')[1:])
                     if ref in ATOMIC_EPSILON
         }
         for line in (l.decode('utf-8').strip() for l in f)
@@ -55,7 +55,7 @@ with open(_CSV.format('aminoacid_epsilon'), 'rb') as f:
 
 
 with open(_CSV.format('aminoacid_radius'), 'rb') as f:
-    _headers = next(f).decode('utf-8').split(',')[1:]
+    headers = next(f).decode('utf-8').split(',')[1:]
     AMINOACID_RADIUS = {
         line.split(',')[0]: {
             atom: ATOMIC_RADIUS[ref]
