@@ -14,7 +14,7 @@ class TestResidual(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.arginine = Protein.from_pdb_file(
-            os.path.join(DATADIR, 'arginine_simple.pdb')
+            os.path.join(DATADIR, 'arginine.pdb')
         )['A'][-3]
 
 

@@ -20,6 +20,10 @@ def score(protein1, protein2, diel=65.0):
             `Cossins et al. <https://dx.doi.org/10.1371/journal.pcbi.1002066>`_.
             for the cytoplasm of E. Coli. [default: 65.0]
 
+    Exemple:
+        >>> cornell.score(barnase, barstar)
+        -22.46...
+
     .. seealso::
         Source concept of the forcefield described in
         `Cornell et al. <https://dx.doi.org/10.1021/ja00124a002>`_

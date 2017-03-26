@@ -22,8 +22,8 @@ class TestProtein(unittest.TestCase):
 class TestMethods(TestProtein):
 
     def test_nearest_atom(self):
-        pos1 = numpy.array([11.296, 86.721, 94.521]) # Coordinates of Atom 33
-        self.assertEqual(self.arginine_prot.nearest_atom(pos1).id, 33)
+        pos1 = numpy.array([11.296, 86.721, 94.521]) # Coordinates of Atom 32
+        self.assertEqual(self.arginine_prot.nearest_atom(pos1).id, 32)
 
         pos2 = numpy.array([12.924, 87.357, 96.42])
-        self.assertEqual(self.arginine_prot.nearest_atom(pos2).id, 39)
+        self.assertEqual(self.arginine_prot.nearest_atom(pos2).id, 38)

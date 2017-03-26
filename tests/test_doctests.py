@@ -15,6 +15,9 @@ import warnings
 
 import numpy
 import dockerasmus
+from dockerasmus.pdb import Protein
+
+from .utils import DATADIR
 
 
 class IgnoreUnicodeChecker(doctest.OutputChecker):
@@ -33,8 +36,11 @@ def _load_tests_from_module(tests, module, globs, setUp, tearDown, recurse=5):
         if isinstance(attr, type(os)):
             if attr.__name__.startswith(module.__name__.split('.')[0]):
                 try:
-                    tests.addTests(doctest.DocTestSuite(attr, globs=globs,
-                        setUp=setUp, tearDown=tearDown, checker=IgnoreUnicodeChecker()))
+                    tests.addTests(doctest.DocTestSuite(
+                        attr, globs=globs,
+                        optionflags=doctest.ELLIPSIS, setUp=setUp,
+                        tearDown=tearDown, checker=IgnoreUnicodeChecker()
+                    ))
                 except ValueError:
                     pass
                 else:
@@ -65,9 +71,15 @@ def load_tests(loader, tests, ignore):
         'method_requires': dockerasmus.utils.decorators.method_requires,
         'distance': dockerasmus.utils.matrices.distance,
 
+        # globs for dockerasmus.score
+        'cornell': dockerasmus.score.forcefield.cornell,
+
         # globs for pdb:
         'Protein': dockerasmus.pdb.Protein,
 
+        # locals
+        'barnase': Protein.from_pdb_file(os.path.join(DATADIR, 'barnase.native.pdb.gz')),
+        'barstar': Protein.from_pdb_file(os.path.join(DATADIR, 'barstar.native.pdb.gz'))
     }
     tests = _load_tests_from_module(tests, dockerasmus, globs, _setUp, _tearDown)
     return tests
