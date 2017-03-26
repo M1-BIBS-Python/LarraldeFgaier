@@ -20,11 +20,6 @@ class Atom(object):
         self.z = z
         self.residual = residual
 
-        # Patch Histidine with proper name
-        if self.residual is not None and self.residual.name == "HIS":
-            self.residual.name = "HID" if "HD1" in self.residual else "HIE"
-
-
     @property
     def pos(self):
         """The position of the atom
@@ -87,4 +82,4 @@ class Atom(object):
             elif self.residual.cter:
                 return table["CTER"][self.name]
             else:
-                raise
+                raise KeyError("{}, {} ({})".format(self.residual.name, self.name, self.id))

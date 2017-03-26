@@ -17,7 +17,7 @@ class Residual(dict):
     def __init__(self, id, name=None, atoms=None):
         super(Residual, self).__init__(atoms or {})
         self.id = id
-        self.name = name
+        self._name = name
 
     def __contains__(self, item):
         """Checks if `item` is contained in the residual.
@@ -73,6 +73,13 @@ class Residual(dict):
     @property
     def nter(self):
         return not self.NTER_ATOMS.isdisjoint(self)
+
+    @property
+    def name(self):
+        if self._name is not None:
+            if self._name == "HIS":
+                return "HID" if "HD1" in self else "HIE"
+            return self._name
 
     def distance_to(self, other):
         """The distance of the mass_center of the residual to `other`
