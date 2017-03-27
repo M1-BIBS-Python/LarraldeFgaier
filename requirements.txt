@@ -1,2 +1,4 @@
 six
 numpy
+
+mock; python_version < '3.3'
