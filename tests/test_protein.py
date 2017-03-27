@@ -7,6 +7,7 @@ import unittest
 import numpy
 
 from dockerasmus.pdb import Protein
+
 from .utils import DATADIR
 
 

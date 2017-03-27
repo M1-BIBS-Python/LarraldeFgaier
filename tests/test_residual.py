@@ -6,6 +6,7 @@ import os
 import unittest
 
 from dockerasmus.pdb import Protein, Residual, Atom
+
 from .utils import DATADIR
 
 

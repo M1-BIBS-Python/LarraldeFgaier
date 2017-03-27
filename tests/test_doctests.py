@@ -12,8 +12,8 @@ import sys
 import doctest
 import re
 import warnings
-
 import numpy
+
 import dockerasmus
 from dockerasmus.pdb import Protein
 
