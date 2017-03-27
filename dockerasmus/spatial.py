@@ -101,5 +101,7 @@ def apply_transformation_matrix(protein, matrix):
             for atom in res.values():
                 old_pos = numpy.append(atom.pos, [1]) # 4 coords vector
                 new_pos = matrix.dot(old_pos)[:3]
-                new_prot[chain.id][res.id][atom.name] = Atom(*new_pos, id=atom.id, name=atom.name)
+                new_prot[chain.id][res.id][atom.name] = Atom(
+                    *new_pos, id=atom.id, name=atom.name, residual=new_res
+                )
     return new_prot
