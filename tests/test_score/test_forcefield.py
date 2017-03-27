@@ -21,8 +21,8 @@ class TestCornellScoringFunction(unittest.TestCase):
 
     @unittest.skipIf(cornell.score._backend=="numpy", "theano is not available")
     def test_backend_agnostic(self):
-        score_t = cornell.score                          # precompiled theano
-        score_n = cornell._CornellScoringFunction(False) # numpy backend
+        score_t = cornell.score                            # precompiled theano
+        score_n = cornell._CornellScoringFunction('numpy') # numpy backend
 
         self.assertAlmostEqual(
             score_t(self.barnase, self.barstar),

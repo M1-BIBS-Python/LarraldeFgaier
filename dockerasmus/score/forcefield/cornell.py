@@ -2,13 +2,8 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-import numpy
 import warnings
 import functools
-try:
-    import theano
-except ImportError:
-    theano = None
 
 from ..base import ScoringFunction
 from ...utils.matrices import compose, distance
@@ -34,20 +29,16 @@ class _CornellScoringFunction(ScoringFunction):
         >>> cornell.score(barnase, barstar)
         -22.4...
 
+    .. note::
+        Available backends: `theano`, `numpy`
+
     .. seealso::
         Source concept of the forcefield described in
         `Cornell et al. <https://dx.doi.org/10.1021/ja00124a002>`_
     """
-    _backend = 'numpy'
+    _backends = ['theano', 'numpy']
 
-    def __init__(self, use_theano=True):
-        if theano is not None and use_theano:
-            self._setup_theano()
-            self._backend = 'theano'
-        elif theano is None:
-            warnings.warn("Theano unavailable, using numpy.")
-
-    def _setup_theano(self):
+    def _setup_theano(self, theano):
 
         ### Dielectric constant
         diel = theano.tensor.dscalar('diel')
@@ -86,41 +77,40 @@ class _CornellScoringFunction(ScoringFunction):
         mx_B = 2 * mx_eps * mx_rad**6
 
         ### Final scoring function
-        self._score = functools.wraps(self._score)(theano.function(
+        self._score = theano.function(
             [v_eps1, v_eps2, v_rad1, v_rad2, v_q1, v_q2, mx_pos1, mx_pos2, diel],
             theano.tensor.sum(theano.tensor.triu(
                 mx_A/(mx_d**12)-mx_B/(mx_d**6)+mx_q/(diel*mx_d), k=1,
             ))
-        ))
-
-
-    def _score(self, v_eps1, v_eps2, v_rad1, v_rad2, v_q1, v_q2, mx_pos1, mx_pos2, diel):
-        """
-        """
-        # Matrix of Van der Waals epsilon
-        mx_epsilon = compose(lambda e1, e2: numpy.sqrt(e1*e2), v_eps1, v_eps2)
-
-        # Matrix of Van der Waals optimal radius for each aminoacid,
-        # to the power of 6
-        mx_radius_6 = compose(lambda r1, r2: r1+r2, v_rad1, v_rad2)**6
-
-        # Matrices A and B from Cornell
-        mx_B = 2 * mx_epsilon * mx_radius_6
-        mx_A = 0.5 * mx_B * mx_radius_6
-
-        # Matrix of aminoacid-wise distance
-        mx_distance = distance(mx_pos1, mx_pos2)
-        mx_distance_6 = mx_distance**6
-
-        # Matrix of aminoacid-wise charge
-        mx_q = compose(lambda q1, q2: q1*q2, v_q1, v_q2)
-
-        # Final matrix (using numpy.triu(k=1, ...) means we're only
-        # summing for i<j, where i is the receptor and j the ligand).
-        return numpy.sum(numpy.triu(k=1, m=\
-            mx_A/(mx_distance_6**2)-mx_B/(mx_distance_6)+mx_q/(80*mx_distance))
         )
 
+    def _setup_numpy(self, numpy):
+
+        def _score(v_eps1, v_eps2, v_rad1, v_rad2, v_q1, v_q2, mx_pos1, mx_pos2, diel):
+            # Matrix of Van der Waals epsilon
+            mx_epsilon = compose(lambda e1, e2: numpy.sqrt(e1*e2), v_eps1, v_eps2)
+
+            # Matrix of Van der Waals optimal radius for each aminoacid,
+            # to the power of 6
+            mx_radius_6 = compose(lambda r1, r2: r1+r2, v_rad1, v_rad2)**6
+
+            # Matrices A and B from Cornell
+            mx_B = 2 * mx_epsilon * mx_radius_6
+            mx_A = 0.5 * mx_B * mx_radius_6
+
+            # Matrix of aminoacid-wise distance
+            mx_distance = distance(mx_pos1, mx_pos2)
+            mx_distance_6 = mx_distance**6
+
+            # Matrix of aminoacid-wise charge
+            mx_q = compose(lambda q1, q2: q1*q2, v_q1, v_q2)
+
+            # Final matrix (using numpy.triu(k=1, ...) means we're only
+            # summing for i<j, where i is the receptor and j the ligand).
+            return numpy.sum(numpy.triu(k=1, m=\
+                mx_A/(mx_distance_6**2)-mx_B/(mx_distance_6)+mx_q/(80*mx_distance))
+            )
+        self._score = _score
 
     def __call__(self, receptor, ligand, diel=65.0):
         return float(self._score(
