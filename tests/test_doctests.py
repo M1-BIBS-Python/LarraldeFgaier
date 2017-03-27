@@ -15,7 +15,9 @@ import warnings
 import numpy
 
 import dockerasmus
+import dockerasmus.score.forcefield.cornell
 from dockerasmus.pdb import Protein
+
 
 from .utils import DATADIR
 

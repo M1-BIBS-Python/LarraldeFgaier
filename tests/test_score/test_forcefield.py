@@ -11,7 +11,6 @@ from dockerasmus.pdb import Protein
 from ..utils import DATADIR
 
 
-
 class TestCornellScoringFunction(unittest.TestCase):
 
     @classmethod
