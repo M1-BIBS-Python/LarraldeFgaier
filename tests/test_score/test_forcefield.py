@@ -19,7 +19,7 @@ class TestCornellScoringFunction(unittest.TestCase):
         cls.barnase = Protein.from_pdb_file(os.path.join(DATADIR, "barnase.native.pdb.gz"))
         cls.barstar = Protein.from_pdb_file(os.path.join(DATADIR, "barstar.native.pdb.gz"))
 
-
+    @unittest.skipIf(cornell.score._backend=="numpy", "theano is not available")
     def test_backend_agnostic(self):
         score_t = cornell.score                          # precompiled theano
         score_n = cornell._CornellScoringFunction(False) # numpy backend
@@ -27,5 +27,5 @@ class TestCornellScoringFunction(unittest.TestCase):
         self.assertAlmostEqual(
             score_t(self.barnase, self.barstar),
             score_n(self.barnase, self.barstar),
-            places=2
+            places=2,
         )

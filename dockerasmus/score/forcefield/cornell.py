@@ -32,16 +32,18 @@ class _CornellScoringFunction(ScoringFunction):
 
     Exemple:
         >>> cornell.score(barnase, barstar)
-        -22.46...
+        -22.4...
 
     .. seealso::
         Source concept of the forcefield described in
         `Cornell et al. <https://dx.doi.org/10.1021/ja00124a002>`_
     """
+    _backend = 'numpy'
 
     def __init__(self, use_theano=True):
         if theano is not None and use_theano:
             self._setup_theano()
+            self._backend = 'theano'
         elif theano is None:
             warnings.warn("Theano unavailable, using numpy.")
 
