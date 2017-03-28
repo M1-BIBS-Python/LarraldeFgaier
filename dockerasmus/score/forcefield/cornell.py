@@ -13,7 +13,14 @@ __all__ = ["score"]
 
 
 class _CornellScoringFunction(ScoringFunction):
-    """Matrix computation of the VDW term of Cornell's force field
+    """Score a docking configuration of the VDW term of Cornell's force field
+
+    .. math::
+
+       S = \sum_{i<j}{\\frac{A_{i,j}}{r_{i,j}^{12}}
+           - 2*\\frac{B_{i,j}}{r_{i,j}^{6}}
+           + \\frac{q_i q_j}{\epsilon * r_{i,j}}}
+
 
     Arguments:
         protein1 (Protein): the reference protein (receptor)
@@ -25,7 +32,7 @@ class _CornellScoringFunction(ScoringFunction):
             `Cossins et al. <https://dx.doi.org/10.1371/journal.pcbi.1002066>`_.
             for the cytoplasm of E. Coli. [default: 65.0]
 
-    Exemple:
+    Example:
         >>> cornell.score(barnase, barstar)
         -22.4...
 
@@ -110,6 +117,7 @@ class _CornellScoringFunction(ScoringFunction):
             return numpy.sum(numpy.triu(k=1, m=\
                 mx_A/(mx_distance_6**2)-mx_B/(mx_distance_6)+mx_q/(80*mx_distance))
             )
+
         self._score = _score
 
     def __call__(self, receptor, ligand, diel=65.0):
