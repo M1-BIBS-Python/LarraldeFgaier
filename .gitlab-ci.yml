@@ -12,6 +12,7 @@ cache:
 stages:
   - test
   - cover
+  - doc
 
 ## TEST TEMPLATE
 
@@ -63,3 +64,13 @@ coverage:
   - pip install -U coverage
   - python -m coverage combine
   - python -m coverage report
+
+
+## READTHEDOCS HOOK
+
+readthedocs:
+  stage: doc
+  image: alpine
+  script:
+  - apk add curl --no-cache
+  - curl -X POST --data "version_slug=$CI_COMMIT_REF_SLUG" https://readthedocs.org/build/dockerasmus
