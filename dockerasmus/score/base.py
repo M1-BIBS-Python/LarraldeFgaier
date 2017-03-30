@@ -17,9 +17,6 @@ class ScoringFunction(object):
 
     def __init__(self, force_backend=None):
 
-        # the actual scoring function
-        self._score = None
-
         # try forcing a specific backend if required
         if force_backend is not None:
             if force_backend not in self._backends:
@@ -53,7 +50,7 @@ class ScoringFunction(object):
                     unavailable_backends.append(backend)
 
         # raise an error if no available backend was found.
-        if self._score is None:
+        if backend_module is None:
             raise RuntimeError(
                 "Could not find any available backend for {} "
                 "among: {}".format(
