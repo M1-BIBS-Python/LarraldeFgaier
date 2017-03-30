@@ -43,3 +43,10 @@ def distance(u, v):
     ]
 
     return numpy.sqrt(sum(d_components))
+
+
+
+def normalized(a, axis=-1, order=2):
+    l2 = numpy.atleast_1d(numpy.linalg.norm(a, order, axis))
+    l2[l2==0] = 1
+    return a / numpy.expand_dims(l2, axis)
