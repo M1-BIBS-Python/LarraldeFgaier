@@ -31,7 +31,6 @@ def distance(u, v):
         >>> distance(x,y)
         array([[ 5.   ,  1.   ],
                [ 3.606,  1.   ]])
-
     """
 
     # Compute distance for each component (x, y for a 2D space,
@@ -45,8 +44,23 @@ def distance(u, v):
     return numpy.sqrt(sum(d_components))
 
 
-
 def normalized(a, axis=-1, order=2):
+    """Returns an array of normalized vectors
+
+    Arguments:
+        a (numpy.array): an array of vectors
+
+    Keyword Arguments:
+        axis (int): the axis on which to norm **[default: -1]**
+        order (int): the order of the norm **[default: 2]**
+
+    Example:
+        >>> a = numpy.array([ (0, 0), (3, 3), (0, 2) ])
+        >>> normalized(a)
+        array([[ 0.   ,  0.   ],
+               [ 0.707,  0.707],
+               [ 0.   ,  1.   ]])
+    """
     l2 = numpy.atleast_1d(numpy.linalg.norm(a, order, axis))
     l2[l2==0] = 1
     return a / numpy.expand_dims(l2, axis)

@@ -72,6 +72,7 @@ def load_tests(loader, tests, ignore):
         'wordrange': dockerasmus.utils.iterators.wordrange,
         'method_requires': dockerasmus.utils.decorators.method_requires,
         'distance': dockerasmus.utils.matrices.distance,
+        'normalized': dockerasmus.utils.matrices.normalized,
         'maybe_import': dockerasmus.utils.maybe_import,
 
         # globs for dockerasmus.score
