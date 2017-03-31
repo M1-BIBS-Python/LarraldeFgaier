@@ -13,10 +13,9 @@ def norm(a):
 
 
 def normalized(a, axis=-1, order=2):
-    return a / norm(a)
-
-
-    #return a / a.sum(axis=axis, keepdims=True)
+    return a / a.sum(axis=axis, keepdims=True)
+    #return a / theano.tensor.nlinalg.norm(a)
+    #return a / norm(a)
     #return a / a.sum(axis=-1, keepdims=True)#.reshape((a.shape[0], 1))
 
 def distance(a,b):

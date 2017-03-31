@@ -21,7 +21,7 @@ def distance(u, v):
     returns a matrix d of shape (n, m) where d[i,j] is the euclidian
     distance between the i-th point of u and the j-th point of v.
 
-    Exemple:
+    Example:
         >>> x = numpy.array([ (0, 0), (1, 1) ])
         >>> y = numpy.array([ (4, 3), (0, 1) ])
         >>> distance(x,y)[0, 1]   # (0,0) / (0,1)
