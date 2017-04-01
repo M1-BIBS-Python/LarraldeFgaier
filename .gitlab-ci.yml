@@ -22,7 +22,7 @@ stages:
     - .coverage*
   script:
   - pip install -U pip setuptools
-  - pip install -r requirements-test.txt
+  - pip install -r tests/requirements.txt
   - python -m coverage run -m unittest discover -v
 
 
