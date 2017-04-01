@@ -84,3 +84,11 @@ class Atom(object):
                 return table["CTER"][self.name]
             else:
                 raise KeyError("{}, {} ({})".format(self.residual.name, self.name, self.id))
+
+    @method_requires(["name", "residual"], "Cannot find atom residual !")
+    def nearest(self, other_atom):
+        return min([
+            atom for atom in self.residual.itervalues()
+                if atom.name.startswith(other_atom)],
+            key=lambda atom: self.distance_to(atom.pos)
+        )
