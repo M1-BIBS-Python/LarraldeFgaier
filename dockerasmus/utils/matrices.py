@@ -36,12 +36,19 @@ def distance(u, v):
     # Compute distance for each component (x, y for a 2D space,
     # x,y,z for a 3D space, etc.) using the compose function
     # and then the
-    d_components = [
-        compose(lambda x,y: (x-y)**2, u_k, v_k)
-            for u_k, v_k in zip(u.T, v.T)
-    ]
-
-    return numpy.sqrt(sum(d_components))
+    # d_components = [
+    #     compose(lambda x,y: (x-y)**2, u_k, v_k)
+    #         for u_k, v_k in zip(u.T, v.T)
+    # ]
+    #
+    # return numpy.sqrt(sum(d_components))
+    mx_arr_u = numpy.repeat(u, v.shape[0], axis=0)
+    mx_arr_v = numpy.tile(v, (u.shape[0], 1))
+    # Calculate vector of euclidian distance
+    v_d = numpy.sqrt(numpy.sum((mx_arr_u-mx_arr_v)**2, axis=1))
+    # Rearrange vector as a matrix where mx_d[i,j] is the distance between
+    # the i-th atom of protein 1 and the j-th atom of protein 2
+    return numpy.reshape(v_d, (u.shape[0], v.shape[0]))
 
 
 def normalized(a, axis=-1, order=2):

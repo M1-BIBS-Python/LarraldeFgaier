@@ -4,22 +4,37 @@ from __future__ import unicode_literals
 
 import abc
 import six
-import warnings
 
-from .. import utils
+from ... import utils
 
 
 @six.add_metaclass(abc.ABCMeta)
-class ScoringFunction(object):
+class BaseComponent(object):
+    """The individual component of a scoring function
 
-    _backends = []
-    _backend = None
+    For instance, the scoring function used in AutoDock4
+    can be decomposed as several independent components:
+
+    .. math::
+
+       V = W_{vdw} V_{vdw}   + W_{hb} V_{hb}
+         + W_{elec} V_{elec} + W_{sol} V_{sol}
+
+    where :math:`V_{x}` is an individual scoring component
+    (Van der Waals interactions, Hydrogen bonds, electro
+    -static forces or desolvation) and :math:`W_{x}`
+    the weight associated to that component.
+    """
+
+    backends = []
+    requires = set()
+    parameters = set()
 
     def __init__(self, force_backend=None):
 
         # try forcing a specific backend if required
         if force_backend is not None:
-            if force_backend not in self._backends:
+            if force_backend not in self.backends:
                 raise ValueError("Unknown backend: {}".format(force_backend))
             backend_module = utils.maybe_import(force_backend)
             if backend_module is None:
@@ -28,18 +43,18 @@ class ScoringFunction(object):
                 backend = force_backend
                 setup_function = getattr(self, "_setup_{}".format(force_backend))
                 setup_function(backend_module)
-                self._backend = force_backend
+                self.backend = force_backend
 
         # find the best available backend (first in the _backend list)
         else:
             unavailable_backends = []
-            for backend in self._backends:
+            for backend in self.backends:
                 backend_module = utils.maybe_import(backend)
                 # the backend was imported
                 if backend_module is not None:
                     setup_function = getattr(self, "_setup_{}".format(backend))
                     setup_function(backend_module)
-                    self._backend = backend
+                    self.backend = backend
                     if unavailable_backends: # if we are not using the best backend
                         warnings.warn("Unavailable backends: {}, using {}".format(
                             ', '.join(unavailable_backends), backend,
@@ -54,11 +69,19 @@ class ScoringFunction(object):
             raise RuntimeError(
                 "Could not find any available backend for {} "
                 "among: {}".format(
-                    type(self).__name__, ', '.join(self._backends)
+                    type(self).__name__, ', '.join(self.backends)
                 )
             )
 
-
     @abc.abstractmethod
-    def __call__(self, protein1, protein2, **kwargs):
+    def __call__(self, args, params):
+        """Compute the score component
+
+        Arguments:
+            args (dict): a dict containing the arguments
+                (precalculated using requirements)
+            params (dict): a dict containing the parameters
+                (values independent of the proteins, used
+                in the component)
+        """
         pass
