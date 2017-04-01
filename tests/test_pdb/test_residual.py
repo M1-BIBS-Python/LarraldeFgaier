@@ -7,7 +7,7 @@ import unittest
 
 from dockerasmus.pdb import Protein, Residual, Atom
 
-from .utils import DATADIR
+from ..utils import DATADIR
 
 
 class TestResidual(unittest.TestCase):
