@@ -19,19 +19,24 @@ class ScoringFunction(object):
             preprocessed to compute the score, based on the
             requirements of the individual scoring components.
 
-    Example: Non-bound terms of Cornell's scoring function
+    Examples:
+
+        Non-bound terms of Cornell's scoring function:
+
         >>> f = ScoringFunction(LennardJones, Coulomb)
         >>> f(barnase, barstar)
         -22.4...
-        >>> g = ScoringFunction(LennardJones, Coulomb, weights=[1, 1e4])
-        >>> g(barnase, barstar)
-        -136.8...
 
+        Using weights on individual components:
+
+        >>> g = ScoringFunction(LennardJones, Fabiola, weights=[1, 3])
+        >>> g(barnase, barstar)
+        -49.1...
     """
 
-    def __init__(self, *components, weights=None):
+    def __init__(self, *components, **kwargs):
         self.components = []
-        self.weights = weights or [1 for _ in range(len(components))]
+        self.weights = kwargs.get('weights') or [1 for _ in range(len(components))]
         for component in components:
             logging.debug("Initializing {}".format(component.__name__))
             self.components.append(component())
