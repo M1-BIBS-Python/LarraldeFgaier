@@ -4,7 +4,8 @@ from __future__ import unicode_literals
 
 import logging
 
-from .components.base import BaseComponent
+from . import components
+from . import requirements
 
 
 class ScoringFunction(object):
@@ -18,14 +19,19 @@ class ScoringFunction(object):
             preprocessed to compute the score, based on the
             requirements of the individual scoring components.
 
-    Example: Non-bound term of Cornell's Forcefield
+    Example: Non-bound terms of Cornell's scoring function
         >>> f = ScoringFunction(LennardJones, Coulomb)
         >>> f(barnase, barstar)
-        -31.38...
+        -22.4...
+        >>> g = ScoringFunction(LennardJones, Coulomb, weights=[1, 1e4])
+        >>> g(barnase, barstar)
+        -136.8...
+
     """
 
-    def __init__(self, *components):
+    def __init__(self, *components, weights=None):
         self.components = []
+        self.weights = weights or [1 for _ in range(len(components))]
         for component in components:
             logging.debug("Initializing {}".format(component.__name__))
             self.components.append(component())
@@ -35,10 +41,10 @@ class ScoringFunction(object):
     def __call__(self, protein1, protein2, **parameters):
         requirements = self._compute_requirements(protein1, protein2)
         score = 0
-        for component in self.components:
+        for weight, component in zip(self.weights, self.components):
             args = self._filter_requirements(component, requirements)
             kwargs = self._filter_parameters(component, parameters)
-            score += component(*args, **kwargs)
+            score += weight*component(*args, **kwargs)
         return score
 
     def _compute_requirements(self, protein1, protein2):
