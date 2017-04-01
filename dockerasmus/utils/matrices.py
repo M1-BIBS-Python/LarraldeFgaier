@@ -1,6 +1,6 @@
 # coding: utf-8
-from __future__ import unicode_literals
 from __future__ import absolute_import
+from __future__ import unicode_literals
 
 import numpy
 
@@ -33,15 +33,6 @@ def distance(u, v):
                [ 3.606,  1.   ]])
     """
 
-    # Compute distance for each component (x, y for a 2D space,
-    # x,y,z for a 3D space, etc.) using the compose function
-    # and then the
-    # d_components = [
-    #     compose(lambda x,y: (x-y)**2, u_k, v_k)
-    #         for u_k, v_k in zip(u.T, v.T)
-    # ]
-    #
-    # return numpy.sqrt(sum(d_components))
     mx_arr_u = numpy.repeat(u, v.shape[0], axis=0)
     mx_arr_v = numpy.tile(v, (u.shape[0], 1))
     # Calculate vector of euclidian distance

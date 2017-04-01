@@ -45,7 +45,7 @@ class BaseComponent(object):
                 setup_function(backend_module)
                 self.backend = force_backend
 
-        # find the best available backend (first in the _backend list)
+        # find the best available backend (first in the backends list)
         else:
             unavailable_backends = []
             for backend in self.backends:

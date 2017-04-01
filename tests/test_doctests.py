@@ -13,10 +13,12 @@ import doctest
 import re
 import warnings
 import numpy
+import theano
+import types
 
 import dockerasmus
-import dockerasmus.score.forcefield.cornell
-from dockerasmus.pdb import Protein
+import dockerasmus.score
+import dockerasmus.pdb
 
 
 from .utils import DATADIR
@@ -35,7 +37,7 @@ class IgnoreUnicodeChecker(doctest.OutputChecker):
 def _load_tests_from_module(tests, module, globs, setUp, tearDown, recurse=5):
     """Load tests from module, iterating through submodules"""
     for attr in (getattr(module, x) for x in dir(module) if not x.startswith('_')):
-        if isinstance(attr, type(os)):
+        if isinstance(attr, types.ModuleType):
             if attr.__name__.startswith(module.__name__.split('.')[0]):
                 try:
                     tests.addTests(doctest.DocTestSuite(
@@ -66,6 +68,7 @@ def load_tests(loader, tests, ignore):
         # generic modules
         'dockerasmus': dockerasmus,
         'numpy': numpy,
+        'theano': theano,   
 
         # globs for dockerasmus.utils
         'nth': dockerasmus.utils.iterators.nth,
@@ -76,14 +79,17 @@ def load_tests(loader, tests, ignore):
         'maybe_import': dockerasmus.utils.maybe_import,
 
         # globs for dockerasmus.score
-        'cornell': dockerasmus.score.forcefield.cornell,
+        'ScoringFunction': dockerasmus.score.ScoringFunction,
+        'LennardJones': dockerasmus.score.components.LennardJones,
+        'Fabiola': dockerasmus.score.components.Fabiola,
+        'Coulomb': dockerasmus.score.components.Coulomb,
 
         # globs for pdb:
         'Protein': dockerasmus.pdb.Protein,
 
         # locals
-        'barnase': Protein.from_pdb_file(os.path.join(DATADIR, 'barnase.native.pdb.gz')),
-        'barstar': Protein.from_pdb_file(os.path.join(DATADIR, 'barstar.native.pdb.gz'))
+        'barnase': dockerasmus.pdb.Protein.from_pdb_file(os.path.join(DATADIR, 'barnase.native.pdb.gz')),
+        'barstar': dockerasmus.pdb.Protein.from_pdb_file(os.path.join(DATADIR, 'barstar.native.pdb.gz'))
     }
     tests = _load_tests_from_module(tests, dockerasmus, globs, _setUp, _tearDown)
     return tests
