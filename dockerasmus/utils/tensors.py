@@ -1,24 +1,28 @@
 # coding: utf-8
 from __future__ import absolute_import
 from __future__ import unicode_literals
+from __future__ import division
 
 import theano
 
 
-def norm(a):
+def norm(a, axis=-1):
+    """Return an array of norms from of an array of vectors.
+    """
     return theano.tensor.sqrt(
         theano.tensor.sum(theano.tensor.sqr(a), axis=-1, keepdims=True)
     )
 
 
-def normalized(a, axis=-1, order=2):
-    #return a / a.sum(axis=axis, keepdims=True)
-    #return a / theano.tensor.nlinalg.norm(a)
-    return a / norm(a)
-    #return a / a.sum(axis=-1, keepdims=True)#.reshape((a.shape[0], 1))
+def normalized(a, axis=-1):
+    """Return an array of normalized vectors.
+    """
+    return a / norm(a, axis=axis)
 
 
 def distance(a,b):
+    """Return a matrix of distances from a matrix of coordinates.
+    """
     mx_arr_a = theano.tensor.repeat(a, b.shape[0], axis=0)
     mx_arr_b = theano.tensor.tile(b, (a.shape[0], 1))
     # Calculate vector of euclidian distance

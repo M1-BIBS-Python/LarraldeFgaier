@@ -2,11 +2,20 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-
 from .base import BaseComponent
 from .. import requirements
 
+
 class LennardJones(BaseComponent):
+    """A scoring component modeling Van der Waals interactions.
+
+    Reference:
+        `Jones, J. E.
+        "On the Determination of Molecular Fields. II. From the Equation of
+        State of a Gas". Proceedings of the Royal Society of London A:
+        Mathematical, Physical and Engineering Sciences 106, 463–477 (1924).
+        <https://dx.doi.org/10.1098%2Frspa.1924.0082>`_
+    """
 
     backends = ["theano", "numpy"]
     requires = [

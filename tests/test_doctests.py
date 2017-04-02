@@ -68,7 +68,7 @@ def load_tests(loader, tests, ignore):
         # generic modules
         'dockerasmus': dockerasmus,
         'numpy': numpy,
-        'theano': theano,   
+        'theano': theano,
 
         # globs for dockerasmus.utils
         'nth': dockerasmus.utils.iterators.nth,
@@ -88,6 +88,7 @@ def load_tests(loader, tests, ignore):
         'Protein': dockerasmus.pdb.Protein,
 
         # locals
+        'arginine': dockerasmus.pdb.Protein.from_pdb_file(os.path.join(DATADIR, 'arginine.pdb'))['A'][-3],
         'barnase': dockerasmus.pdb.Protein.from_pdb_file(os.path.join(DATADIR, 'barnase.native.pdb.gz')),
         'barstar': dockerasmus.pdb.Protein.from_pdb_file(os.path.join(DATADIR, 'barstar.native.pdb.gz'))
     }

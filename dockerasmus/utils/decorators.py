@@ -6,7 +6,7 @@ import functools
 
 
 def method_requires(attributes, msg):
-    """Raise a value error with `msg` if any of `attributes` of self is None
+    """Raise a value error with `msg` if any of `attributes` is ``None``.
 
     Example:
         >>> class Car(object):

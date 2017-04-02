@@ -192,11 +192,11 @@ class Protein(collections.OrderedDict):
         Keyword Arguments:
             mode (str): how to compute the contact map. Available methods are:
                 * 'nearest': the distance between the two closest atoms of
-                    the two residuals. **[Default]**
+                the two residuals. **[Default]**
                 * 'farthest': the distance between the two farthest atoms
-                    of the two residuals.
+                of the two residuals.
                 * 'mass_center': the distance between the mass center of the
-                    two residuals.
+                two residuals.
         """
         if not mode in self._CMAP_MODES:
             raise ValueError("Unknown mode: '{}'".format(mode))

@@ -3,11 +3,19 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 from __future__ import division
 
-
 from .base import BaseComponent
 from .. import requirements
 
+
 class Fabiola(BaseComponent):
+    """A scoring component modeling hydrogen bonds.
+
+    Reference:
+        `Fabiola, F., Bertram, R., Korostelev, A. & Chapman, M. S.
+        "An improved hydrogen bond potential: Impact on medium resolution
+        protein structures". Protein Sci 11, 1415–1423 (2002).
+        <https://dx.doi.org/10.1110%2Fps.4890102>`_
+    """
 
     backends = ["theano", "numpy"]
     requires = [

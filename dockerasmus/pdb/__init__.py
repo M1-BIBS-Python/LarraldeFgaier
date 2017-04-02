@@ -2,10 +2,8 @@
 """
 pdb
 ===
-An Object model of a PDB protein
 
-Use `Protein.from_pdb_file` to quickly import a protein from a pdb file,
-or manually create a protein (see)
+The Object model of a PDB protein.
 """
 
 from __future__ import absolute_import

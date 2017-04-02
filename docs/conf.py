@@ -181,7 +181,7 @@ texinfo_documents = [
 ]
 
 
-
+# -- Extensions parameters ------------------------------------------------
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
@@ -189,3 +189,6 @@ intersphinx_mapping = {
     'http://docs.scipy.org/doc/numpy/': None,
     'http://deeplearning.net/software/theano/': None,
 }
+
+# Group members by their respective type
+autodoc_member_order = 'groupwise'

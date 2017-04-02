@@ -2,12 +2,19 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-
 from .base import BaseComponent
 from .. import requirements
 
-class Coulomb(BaseComponent):
 
+class Coulomb(BaseComponent):
+    """A scoring component modeling electrostatic forces.
+
+    Reference:
+        `Coulomb, C. A.
+        "Premier mémoire sur l’électricité et le magnétisme". Histoire de
+        l’Académie Royale des Sciences, 569-577 (1785).
+        <https://books.google.com/books?id=by5EAAAAcAAJ&pg=PA569>`_
+    """
     backends = ["theano", "numpy"]
     requires = [
         requirements.charge,

@@ -7,7 +7,7 @@ from .pdb import Atom, Chain, Protein, Residual
 
 
 def TranslationMatrix(dx=0, dy=0, dz=0):
-    """Returns a translation matrix
+    """Return a translation matrix.
     """
     return numpy.array([
         [1, 0, 0, dx],
@@ -18,9 +18,8 @@ def TranslationMatrix(dx=0, dy=0, dz=0):
 
 
 def RotationMatrix(theta_x=0, theta_y=0, theta_z=0):
-    """Returns a rotation matrix
+    """Return a rotation matrix.
     """
-
     cos = numpy.cos
     sin = numpy.sin
 
@@ -49,11 +48,11 @@ def RotationMatrix(theta_x=0, theta_y=0, theta_z=0):
 
 
 def transform_cartesian(protein, x=0, y=0, z=0, sigma=0, rho=0):
-    """Rotate and translate the protein
+    """Rotate and translate the protein.
 
     Arguments:
-        protein (`Protein`): a protein to move and rotate in
-            the worldspace
+        protein (`dockerasmus.pdb.Protein`): a protein to move and
+            rotate in the worldspace.
 
     Keyword Arguments:
         x (int): the x cartesian coordinate to move the protein to
@@ -69,20 +68,20 @@ def transform_cartesian(protein, x=0, y=0, z=0, sigma=0, rho=0):
 
 
 def transform_spherical(protein, r=0, phi=0, theta=0, sigma=0, rho=0):
-    """Rotate and translate the protein
+    """Rotate and translate the protein.
 
     Arguments:
-        protein (`Protein`): a protein to move and rotate in
-            the worldspace
+        protein (`dockerasmus.pdb.Protein`): a protein to move and
+            rotate in the worldspace.
 
     Keyword Arguments:
-        r (int): the radial distance to move the protein to
-        phi (int): the inclination to move the protein to
-        theta (int): the azimuth to move the protein to
+        r (int): the radial distance to move the protein to.
+        phi (int): the inclination to move the protein to.
+        theta (int): the azimuth to move the protein to.
         sigma (int): the angle to rotate the protein along the x axis,
-            **in radians**
+            **in radians**.
         rho (int): the angle to rotate the protein along the y axis,
-            **in radians**
+            **in radians**.
     """
     x = r * numpy.sin(phi) * numpy.cos(theta)
     y = r * numpy.sin(theta) * numpy.sin(phi)
@@ -91,7 +90,7 @@ def transform_spherical(protein, r=0, phi=0, theta=0, sigma=0, rho=0):
 
 
 def apply_transformation_matrix(protein, matrix):
-    """Apply a 4x4 transformation matrix to a protein model
+    """Apply a 4x4 transformation matrix to a protein model.
     """
     new_prot = Protein()
     for chain in protein.values():

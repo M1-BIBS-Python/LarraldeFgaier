@@ -10,7 +10,7 @@ import six
 def wordrange(start='A', stop=None):
     """A word range.
 
-    Exemple:
+    Example:
         >>> for word in wordrange('AA', 'AC'):
         ...     print(word)
         AA
@@ -34,7 +34,7 @@ def wordrange(start='A', stop=None):
 def nth(iterable, n, default=None):
     """Returns the nth item of an interator or a default value
 
-    Exemple:
+    Example:
         >>> nth(range(10), 2)
         2
         >>> nth(range(10), 11, "oops")

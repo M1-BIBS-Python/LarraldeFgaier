@@ -1,22 +1,31 @@
 Scoring Functions
 =================
 
+Generalized Scoring Function
+----------------------------
+
+.. autoclass::  dockerasmus.score.ScoringFunction
+   :members:
 
 
+Components
+----------
 
-Force field
------------
+.. autoclass:: dockerasmus.score.components.LennardJones
+   :members: __call__
 
-.. autodata:: dockerasmus.score.forcefield.cornell.score
-   :annotation: (protein1, protein2)
+.. autoclass:: dockerasmus.score.components.Coulomb
+   :members: __call__
+
+.. autoclass:: dockerasmus.score.components.Fabiola
+   :members: __call__
 
 
-Distance
---------
+Requirements
+------------
 
-.. autodata:: dockerasmus.score.rmsd.pairwise.score
-   :annotation: = PairwiseRMSD(`theano`, `numpy`)
-
+.. automodule:: dockerasmus.score.requirements
+   :members:
 
 
 
