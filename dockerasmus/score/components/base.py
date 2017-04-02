@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 import abc
 import six
+import inspect
 
 from ... import utils
 
@@ -29,6 +30,30 @@ class BaseComponent(object):
     backends = []
     requires = set()
     parameters = set()
+
+    @classmethod
+    def kwargs(cls):
+        """The list of __call__ keyword arguments.
+        """
+        signature = inspect.signature(cls.__call__)
+        return [
+            argname
+                for argname, arg in signature.parameters.items()
+                    if arg.default != arg.empty
+        ]
+
+
+    @classmethod
+    def args(cls):
+        """The list of __call__ positional arguments.
+        """
+        signature = inspect.signature(cls.__call__)
+        return [
+            argname
+                for argname, arg in signature.parameters.items()
+                    if arg.default == arg.empty
+                        and arg.name != "self"
+        ]
 
     def __init__(self, force_backend=None):
 
@@ -74,14 +99,7 @@ class BaseComponent(object):
             )
 
     @abc.abstractmethod
-    def __call__(self, args, params):
+    def __call__(self):
         """Compute the score component
-
-        Arguments:
-            args (dict): a dict containing the arguments
-                (precalculated using requirements)
-            params (dict): a dict containing the parameters
-                (values independent of the proteins, used
-                in the component)
         """
         pass
