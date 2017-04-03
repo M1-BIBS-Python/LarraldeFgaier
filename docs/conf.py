@@ -187,6 +187,7 @@ texinfo_documents = [
 intersphinx_mapping = {
     'https://docs.python.org/3/': None,
     'http://docs.scipy.org/doc/numpy/': None,
+    'https://docs.scipy.org/doc/scipy/reference/': None,
     'http://deeplearning.net/software/theano/': None,
 }
 
