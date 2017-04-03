@@ -21,39 +21,42 @@ class BaseComponent(object):
        V = W_{vdw} V_{vdw}   + W_{hb} V_{hb}
          + W_{elec} V_{elec} + W_{sol} V_{sol}
 
-    where :math:`V_{x}` is an individual scoring component
+    where :math:`V_{i}` is an individual scoring component
     (Van der Waals interactions, Hydrogen bonds, electro
-    -static forces or desolvation) and :math:`W_{x}`
+    -static forces or desolvation) and :math:`W_{i}`
     the weight associated to that component.
     """
 
     backends = []
-    requires = set()
-    parameters = set()
+    _args, _kwargs = None, None
 
     @classmethod
     def kwargs(cls):
         """The list of __call__ keyword arguments.
         """
-        signature = inspect.signature(cls.__call__)
-        return [
-            argname
-                for argname, arg in signature.parameters.items()
-                    if arg.default != arg.empty
-        ]
+        if cls._kwargs is None:
+            signature = inspect.signature(cls.__call__)
+            cls._kwargs = [
+                argname
+                    for argname, arg in signature.parameters.items()
+                        if arg.default != arg.empty
+            ]
+        return cls._kwargs
 
 
     @classmethod
     def args(cls):
         """The list of __call__ positional arguments.
         """
-        signature = inspect.signature(cls.__call__)
-        return [
-            argname
-                for argname, arg in signature.parameters.items()
-                    if arg.default == arg.empty
-                        and arg.name != "self"
-        ]
+        if cls._args is None:
+            signature = inspect.signature(cls.__call__)
+            cls._args = [
+                argname
+                    for argname, arg in signature.parameters.items()
+                        if arg.default == arg.empty
+                            and arg.name != "self"
+            ]
+        return cls._args
 
     def __init__(self, force_backend=None):
 

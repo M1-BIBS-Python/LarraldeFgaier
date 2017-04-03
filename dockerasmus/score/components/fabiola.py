@@ -18,12 +18,7 @@ class Fabiola(BaseComponent):
     """
 
     backends = ["theano", "numpy"]
-    requires = [
-        requirements.hbond_atoms_positions
-    ]
-    parameters = {
-        'm', 'r_null', 'theta_low', 'theta_high'
-    }
+
 
     def _setup_theano(self, theano):
         from ...utils.tensors import normalized, distance

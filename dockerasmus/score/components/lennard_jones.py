@@ -18,11 +18,6 @@ class LennardJones(BaseComponent):
     """
 
     backends = ["theano", "numpy"]
-    requires = [
-        requirements.epsilon,
-        requirements.vdw_radius,
-        requirements.distance,
-    ]
 
     def _setup_theano(self, theano):
         ### Epsilon matrix from protein vectors

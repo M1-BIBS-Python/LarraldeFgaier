@@ -6,7 +6,7 @@ from ...utils.matrices import distance as distance_matrix
 
 
 __all__ = [
-    "epsilon", "distance", "vdw_radius", "charge", "hbond_atoms_positions",
+    "epsilon", "distance", "vdw_radius", "charge", "ocn_atoms_positions",
 ]
 
 
@@ -18,7 +18,7 @@ def distance(protein1, protein2):
     return distance_matrix(
         protein1.atom_positions(),
         protein2.atom_positions()
-    )    
+    )
 
 
 def vdw_radius(protein1, protein2):
@@ -29,7 +29,7 @@ def charge(protein1, protein2):
     return protein1.atom_charges(), protein2.atom_charges()
 
 
-def hbond_atoms_positions(protein1, protein2):
+def ocn_atoms_positions(protein1, protein2):
     import numpy
 
     return (

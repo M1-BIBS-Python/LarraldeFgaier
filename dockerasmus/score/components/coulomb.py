@@ -16,13 +16,7 @@ class Coulomb(BaseComponent):
         <https://books.google.com/books?id=by5EAAAAcAAJ&pg=PA569>`_
     """
     backends = ["theano", "numpy"]
-    requires = [
-        requirements.charge,
-        requirements.distance
-    ]
-    parameters = {
-        'diel',
-    }
+
 
     def _setup_theano(self, theano):
         ### Dielectric constant
