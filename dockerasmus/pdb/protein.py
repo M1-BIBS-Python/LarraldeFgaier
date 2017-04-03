@@ -29,20 +29,12 @@ class Protein(collections.OrderedDict):
 
     @staticmethod
     def _parse_pdb_atom_line(line):
-        """Return a raw `dict` with atom properties from a pdb atom line
+        """Return a raw `dict` with atom properties from a pdb atom line.
 
         Returns:
-            dict: a dictionary which keys are:
-                * serial
-                * name
-                * chainID
-                * altLoc
-                * resName
-                * resSeq
-                * iCode
-                * x
-                * y
-                * z
+            dict: a dictionary which keys are: ``serial``, ``name``,
+                ``chainID``, ``altLoc``, ``resName``, ``resSeq``,
+                ``iCode``, ``x``, ``y`` and ``z``.
         """
         schema = {'serial': (6, 11), 'name': (12, 16), 'altLoc': (16, 17),
                   'resName': (17, 20), 'chainID': (21, 22), 'resSeq': (22, 26),
@@ -63,7 +55,7 @@ class Protein(collections.OrderedDict):
 
         Arguments:
             handle (file handle): a file-like object opened in
-                binary read mode.
+                binary read mode (must be line-by-line iterable).
         """
 
         protein = cls()
@@ -89,8 +81,8 @@ class Protein(collections.OrderedDict):
         """Create a new Protein object from a PDB file.
 
         Arguments:
-            path (str): the path to a PDB protein file (supports gzipped
-                PDB files).
+            path (`str`): the path to a PDB protein file (supports gzipped
+                or plain text PDB files).
         """
         if path.endswith('.gz'):
             open_function = gzip.open
@@ -100,6 +92,14 @@ class Protein(collections.OrderedDict):
             return cls.from_pdb(pdb_file)
 
     def __init__(self, id=None, name=None, chains=None):
+        """Create a new Protein object.
+
+        Arguments:
+            id (`int`): the id of the protein.
+            name (`str`): the name of the protein.
+            chains (`dict` of `Chain`): a dictionary of the chains
+                of the proteins referenced by their ``id``.
+        """
         super(Protein, self).__init__(chains or {})
         self.id = id
         self.name = name
@@ -124,9 +124,9 @@ class Protein(collections.OrderedDict):
             )
 
     def __getitem__(self, item):
-        """Overloaded __getitem__ allowing slicing and individual atom access
+        """Overloaded __getitem__ allowing slicing and individual atom access.
 
-        Exemple:
+        Example:
             >>> complex = Protein.from_pdb_file("tests/data/1brs.pdb.gz")
             >>> barstar = complex[u'D':]
             >>> sorted(barstar.keys())
@@ -137,7 +137,6 @@ class Protein(collections.OrderedDict):
             Traceback (most recent call last):
                ...
             KeyError: u'Could not find Atom with id: 1'
-
         """
         if isinstance(item, slice):
             stop = item.stop or iterators.nth(iterators.wordrange(max(self.keys())), 1)
@@ -156,10 +155,35 @@ class Protein(collections.OrderedDict):
 
     @property
     def mass(self):
+        """The mass of the protein.
+
+        Warning:
+            Computed as the sum of the masses of the residuals
+            of the chain (it does not take the masses of the atoms
+            in the peptidic bound into account).
+        """
         return sum(chain.mass for chain in self.itervalues())
 
     @property
     def mass_center(self):
+        r"""The position of mass center of the protein.
+
+        .. math::
+
+           mc &= \sum_{i}{\frac{w_i}{W}
+             \begin{pmatrix} x_i \\ y_i \\ z_i \end{pmatrix}
+           }
+
+        where :math:`i` is the index of each atom, :math:`x_i`
+        (resp. :math:`y_i`) (resp. :math:`z_i`) if the abcissa
+        (resp. ordinate) (resp. height) of the atom :math:`i` in the
+        worldspace, and :math:`W = \sum_i{w_i}` the approximated mass
+        of the whole protein.
+
+        Warning:
+            Uses `Protein.mass`, so only the atoms on the residuals
+            of each aminoacid are used for the computation.
+        """
         mass = self.mass
         return sum(
             (atom.mass/mass)*atom.pos for chain in self.itervalues()
@@ -168,7 +192,7 @@ class Protein(collections.OrderedDict):
 
     @property
     def radius(self):
-        """The radius of the sphere the protein would fit in
+        """The radius of the sphere the protein would fit in.
 
         Equals to the norm of the position of the atom of the protein farthest
         from its mass center.
@@ -218,21 +242,19 @@ class Protein(collections.OrderedDict):
         return self._atom_radius
 
     def contact_map(self, other, mode='nearest'):
-        """Return a 2D contact map between residuals of ``self`` and ``other``
+        """Return a 2D contact map between residuals of ``self`` and ``other``.
 
         Arguments:
-            other (Protein): the other protein with which to create
+            other (`Protein`): the other protein with which to create
                 a contact map (chains/residuals/atoms must have the same
                 names in both proteins)
 
         Keyword Arguments:
-            mode (str): how to compute the contact map. Available methods are:
-                * 'nearest': the distance between the two closest atoms of
-                the two residuals. **[Default]**
-                * 'farthest': the distance between the two farthest atoms
-                of the two residuals.
-                * 'mass_center': the distance between the mass center of the
-                two residuals.
+            mode (`str`): how to compute the contact map. Available modes are:
+              ``'nearest'`` (the distance between the two closest atoms of
+              the two residuals), ``'farthest'`` (the distance between the two
+              farthest atoms of the two residuals) or ``'mass_center'``
+              (the distance between the mass center of the two residuals).
         """
         if not mode in self._CMAP_MODES:
             raise ValueError("Unknown mode: '{}'".format(mode))
@@ -251,7 +273,7 @@ class Protein(collections.OrderedDict):
         return cmap
 
     def copy(self):
-        """Returns a deep copy of self
+        """Return a deep copy of ``self``.
         """
         return Protein(self.id, self.name, {
             chain.id: Chain(chain.id, chain.name, {
@@ -262,13 +284,20 @@ class Protein(collections.OrderedDict):
         })
 
     def iteratoms(self):
+        """Yield every atom in ``self``.
+
+        Yields:
+            `dockerasmus.pdb.Atom`: every atom of the protein,
+            ordered by the id of their chain and the id
+            of their residual.
+        """
         for chain in self.itervalues():
             for residual in chain.itervalues():
                 for atom in residual.itervalues():
                     yield atom
 
     def nearest_atom(self, pos):
-        """Returns the atom nearest to the position `pos`
+        """Return the atom nearest to the position ``pos``.
         """
         return min(
             (atom for chain in self.values() for res in chain.values() for atom in res.values()),

@@ -33,11 +33,12 @@ class Chain(collections.OrderedDict):
 
     @property
     def mass(self):
-        """The mass of the chain
+        """The mass of the chain.
 
-        Computed as the sum of the masses of the residuals
-        of the chain (it does not take the masses of the aminous
-        acids in the peptidic bound into account).
+        Warning:
+            Computed as the sum of the masses of the residuals
+            of the chain (it does not take the masses of the atoms
+            in the peptidic bound into account).
         """
         return sum(res.mass for res in self.itervalues())
 

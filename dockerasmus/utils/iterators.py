@@ -32,7 +32,7 @@ def wordrange(start='A', stop=None):
 
 
 def nth(iterable, n, default=None):
-    """Returns the nth item of an interator or a default value
+    """Return the nth item of an interable or a default value.
 
     Example:
         >>> nth(range(10), 2)

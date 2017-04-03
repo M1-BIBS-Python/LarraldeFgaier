@@ -21,7 +21,7 @@ class Residual(dict):
         self._name = name
 
     def __contains__(self, item):
-        """Checks if `item` is contained in the residual.
+        """Check if `item` is contained in the residual.
 
         Arguments:
             item: either an atom_id (`int`) or an `Atom` object

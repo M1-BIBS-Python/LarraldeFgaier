@@ -1,5 +1,4 @@
 -r ../requirements.txt
 
 sphinx
-sphinxcontrib-napoleon
 sphinxjp.themes.basicstrap

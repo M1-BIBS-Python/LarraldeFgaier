@@ -54,7 +54,7 @@ class Atom(object):
 
     @property
     def epsilon(self):
-        """The :math:`\epsilon` of the atom (_empirical_).
+        r"""The :math:`\epsilon` of the atom (_empirical_).
 
         See Also:
             `dockerasmus.score.components.LennardJones`
@@ -88,7 +88,7 @@ class Atom(object):
             return six.iteritems(self)
 
     def distance_to(self, other):
-        """Computes the distance to ``other``
+        """Computes the distance to ``other``.
 
         Arguments:
             other (numpy.array): the position to compute the

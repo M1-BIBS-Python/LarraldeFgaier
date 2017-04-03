@@ -13,9 +13,9 @@ __all__ = ["decorators", "iterators", "matrices", "maybe_import"]
 
 
 def maybe_import(module_name):
-    """Import a module if available
+    """Import a module if available.
 
-    Exemple:
+    Example:
         >>> maybe_import("math")            # Returns the actual module
         <module 'math' from ...>
         >>> maybe_import("nomodulehere")    # Returns None
