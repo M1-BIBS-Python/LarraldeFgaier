@@ -1,8 +1,8 @@
 **Scoring Functions** (dockerasmus.score)
 =========================================
 
-Generalized Scoring Function
-----------------------------
+**Generalized Scoring Function**
+--------------------------------
 
 .. autoclass::  dockerasmus.score.ScoringFunction
    :members:

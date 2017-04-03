@@ -1,8 +1,20 @@
 Dockerasmus
 =======================================
-***A python module designed for docking**
+*docking itself through university*
 
-|build| |coverage| 
+|docs| |build| |coverage|
+
+.. |docs| image:: http://readthedocs.org/projects/dockerasmus/badge/?version=latest
+   :target: http://dockerasmus.readthedocs.io/en/latest/?badge=latest
+
+.. |build| image:: https://gitlab.com/althonos/dockerasmus/badges/master/build.svg
+   :target: https://gitlab.com/althonos/dockerasmus/pipelines?scope=branches
+
+.. |coverage| image:: https://codecov.io/gl/althonos/dockerasmus/branch/master/graph/badge.svg?token=eNxJwF5lhn
+   :target: https://codecov.io/gl/althonos/dockerasmus
+
+
+
 
 Dockerasmus is a Python version-agnostic module that was created to
 quickly solve docking problems, as part of a Python assignment from
