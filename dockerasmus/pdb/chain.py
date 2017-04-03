@@ -19,12 +19,12 @@ class Chain(collections.OrderedDict):
         self.name = name
 
     def __contains__(self, item):
-        if isinstance(item, Residual):
+        if isinstance(item, int):
             return super(Chain, self).__contains__(item)
         elif isinstance(item, Atom):
             return any(item in res for res in self)
-        elif isinstance(item, int):
-            return any(item == res.id for res in self.itervalues())
+        elif isinstance(item, Residual):
+            return any(item == res for res in self.itervalues())
         else:
             raise TypeError(
                 "'in <Chain>' requires Residual, Atom or int"
