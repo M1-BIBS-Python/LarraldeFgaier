@@ -53,24 +53,14 @@ class ScoringFunction(object):
                 for c in components for req in c.args()
         }
 
-
     def __call__(self, protein1, protein2, **parameters):
         requirements = self._compute_requirements(protein1, protein2)
-        # score = 0
-        # for weight, component in zip(self.weights, self.components):
-        #     args = self._filter_requirements(component, requirements)
-        #     kwargs = self._filter_parameters(component, parameters)
-        #     score += weight*component(*args, **kwargs)
-        # return score
-
-        return sum(
-            weight*component(
-                *self._filter_requirements(component, requirements),
-                **self._filter_parameters(component, parameters),
-            )
-            for weight, component in zip(self.weights, self.components)
-        )
-
+        score = 0
+        for weight, component in zip(self.weights, self.components):
+            args = self._filter_requirements(component, requirements)
+            kwargs = self._filter_parameters(component, parameters)
+            score += weight*component(*args, **kwargs)
+        return score
 
     def _compute_requirements(self, protein1, protein2):
         return {req: func(protein1, protein2) for req,func in self.requirements.items()}
