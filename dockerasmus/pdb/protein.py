@@ -181,47 +181,6 @@ class Protein(collections.OrderedDict):
                         for atom in residual.itervalues()
         )
 
-    def contact_map(self, other, mode='nearest'):
-        """Return a 2D contact map between residuals of `self` and `other`
-
-        Arguments:
-            other (Protein): the other protein with which to create
-                a contact map (chains/residuals/atoms must have the same
-                names in both proteins)
-
-        Keyword Arguments:
-            mode (str): how to compute the contact map. Available methods are:
-                * 'nearest': the distance between the two closest atoms of
-                the two residuals. **[Default]**
-                * 'farthest': the distance between the two farthest atoms
-                of the two residuals.
-                * 'mass_center': the distance between the mass center of the
-                two residuals.
-        """
-        if not mode in self._CMAP_MODES:
-            raise ValueError("Unknown mode: '{}'".format(mode))
-
-        dim_x = max(r.id for chain in self.itervalues() for r in chain.itervalues())
-        dim_y = max(r.id for chain in other.itervalues() for r in chain.itervalues())
-
-        cmap = numpy.zeros((dim_x+1, dim_y+1))
-
-        for c in self.itervalues():
-            for r in c.itervalues():
-                for other_c in other.itervalues():
-                    for other_r in other_c.itervalues():
-                        cmap[r.id, other_r.id] = self._CMAP_MODES[mode](r, other_r)
-
-        return cmap
-
-    def nearest_atom(self, pos):
-        """Returns the atom nearest to the position `pos`
-        """
-        return min(
-            (atom for chain in self.values() for res in chain.values() for atom in res.values()),
-            key = lambda a: a.distance_to(pos)
-        )
-
     def atom_charges(self):
         """The vector of the charge of each atom of the protein.
         """
@@ -258,18 +217,38 @@ class Protein(collections.OrderedDict):
             ])
         return self._atom_radius
 
-    if six.PY3:
-        def itervalues(self):
-            return six.itervalues(self)
+    def contact_map(self, other, mode='nearest'):
+        """Return a 2D contact map between residuals of ``self`` and ``other``
 
-        def iteritems(self):
-            return six.iteritems(self)
+        Arguments:
+            other (Protein): the other protein with which to create
+                a contact map (chains/residuals/atoms must have the same
+                names in both proteins)
 
-    def iteratoms(self):
-        for chain in self.itervalues():
-            for residual in chain.itervalues():
-                for atom in residual.itervalues():
-                    yield atom
+        Keyword Arguments:
+            mode (str): how to compute the contact map. Available methods are:
+                * 'nearest': the distance between the two closest atoms of
+                the two residuals. **[Default]**
+                * 'farthest': the distance between the two farthest atoms
+                of the two residuals.
+                * 'mass_center': the distance between the mass center of the
+                two residuals.
+        """
+        if not mode in self._CMAP_MODES:
+            raise ValueError("Unknown mode: '{}'".format(mode))
+
+        dim_x = max(r.id for chain in self.itervalues() for r in chain.itervalues())
+        dim_y = max(r.id for chain in other.itervalues() for r in chain.itervalues())
+
+        cmap = numpy.zeros((dim_x+1, dim_y+1))
+
+        for c in self.itervalues():
+            for r in c.itervalues():
+                for other_c in other.itervalues():
+                    for other_r in other_c.itervalues():
+                        cmap[r.id, other_r.id] = self._CMAP_MODES[mode](r, other_r)
+
+        return cmap
 
     def copy(self):
         """Returns a deep copy of self
@@ -281,3 +260,24 @@ class Protein(collections.OrderedDict):
             })
                 for chain in self.itervalues()
         })
+
+    def iteratoms(self):
+        for chain in self.itervalues():
+            for residual in chain.itervalues():
+                for atom in residual.itervalues():
+                    yield atom
+
+    def nearest_atom(self, pos):
+        """Returns the atom nearest to the position `pos`
+        """
+        return min(
+            (atom for chain in self.values() for res in chain.values() for atom in res.values()),
+            key = lambda a: a.distance_to(pos)
+        )
+
+    if six.PY3:
+        def itervalues(self):
+            return six.itervalues(self)
+
+        def iteritems(self):
+            return six.iteritems(self)

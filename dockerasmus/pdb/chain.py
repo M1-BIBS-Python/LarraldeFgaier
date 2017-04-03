@@ -31,13 +31,6 @@ class Chain(collections.OrderedDict):
                 " as left operand, not {}".format(type(item).__name__)
             )
 
-    if six.PY3:
-        def itervalues(self):
-            return six.itervalues(self)
-
-        def iteritems(self):
-            return six.iteritems(self)
-
     @property
     def mass(self):
         """The mass of the chain
@@ -47,3 +40,10 @@ class Chain(collections.OrderedDict):
         acids in the peptidic bound into account).
         """
         return sum(res.mass for res in self.itervalues())
+
+    if six.PY3:
+        def itervalues(self):
+            return six.itervalues(self)
+
+        def iteritems(self):
+            return six.iteritems(self)

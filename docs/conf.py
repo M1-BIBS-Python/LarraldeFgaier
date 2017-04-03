@@ -191,4 +191,4 @@ intersphinx_mapping = {
 }
 
 # Group members by their respective type
-autodoc_member_order = 'groupwise'
+#autodoc_member_order = 'groupwise'

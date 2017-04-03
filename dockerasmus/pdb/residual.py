@@ -41,12 +41,9 @@ class Residual(dict):
                     six.text_type.__name__,type(item).__name__)
             )
 
-    if six.PY3:
-        def itervalues(self):
-            return six.itervalues(self)
-
-        def iteritems(self):
-            return six.iteritems(self)
+    @property
+    def cter(self):
+        return not self.CTER_ATOMS.isdisjoint(self)
 
     @property
     def mass(self):
@@ -68,33 +65,36 @@ class Residual(dict):
         return sum((atom.mass/mass)*atom.pos for atom in self.itervalues())
 
     @property
-    def cter(self):
-        return not self.CTER_ATOMS.isdisjoint(self)
-
-    @property
-    def nter(self):
-        return not self.NTER_ATOMS.isdisjoint(self)
-
-    @property
     def name(self):
         if self._name is not None:
             if self._name == "HIS":
                 return "HID" if "HD1" in self else "HIE"
             return self._name
 
+    @property
+    def nter(self):
+        return not self.NTER_ATOMS.isdisjoint(self)
+
+    if six.PY3:
+        def itervalues(self):
+            return six.itervalues(self)
+
+        def iteritems(self):
+            return six.iteritems(self)
+
     def distance_to(self, other):
-        """The distance of the mass_center of the residual to `other`
+        """The distance of the mass center of the residual to ``other``
         """
         if len(other) != 3:
-            raise ValueError("")
+            raise ValueError("") #TODO
         return numpy.linalg.norm(self.mass_center - other)
 
     def rmsd(self, ref):
         """The RMSD of the atoms of the residual, with ref as reference.
 
         Arguments:
-            ref (numpy.array): the x,y,z coordinates of the reference
-                position.
+            ref (`numpy.ndarray` or `list`): the x,y,z
+                coordinates of the reference position.
         """
         return numpy.sqrt(
             (1/len(self))*sum(atom.distance_to(ref) for atom in self)
