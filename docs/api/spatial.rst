@@ -1,5 +1,5 @@
-Spatial transformations
-=======================
+**Spatial transformations** (dockerasmus.spatial)
+=================================================
 
 
 .. automodule:: dockerasmus.spatial

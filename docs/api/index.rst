@@ -6,5 +6,5 @@ API Reference
    :maxdepth: 2
 
    pdb
-   scoring
+   score
    spatial

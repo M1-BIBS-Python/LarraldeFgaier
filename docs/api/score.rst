@@ -1,5 +1,5 @@
-Scoring Functions
-=================
+**Scoring Functions** (dockerasmus.score)
+=========================================
 
 Generalized Scoring Function
 ----------------------------
@@ -8,8 +8,8 @@ Generalized Scoring Function
    :members:
 
 
-Components
-----------
+**Components** (dockerasmus.score.components)
+---------------------------------------------
 
 .. autoclass:: dockerasmus.score.components.LennardJones
    :members: __call__
@@ -21,8 +21,8 @@ Components
    :members: __call__
 
 
-Requirements
-------------
+**Requirements** (dockerasmus.score.requirements)
+-------------------------------------------------
 
 .. automodule:: dockerasmus.score.requirements
    :members:

@@ -1,33 +1,32 @@
-Protein Data Bank objects
-=========================
+**Protein Data Bank objects** (dockerasmus.pdb)
+===============================================
 
-Protein
--------
+**Protein** (dockerasmus.pdb.protein)
+-------------------------------------
 
 .. autoclass:: dockerasmus.pdb.Protein
    :members:
-   
 
-Chain
------
+
+**Chain** (dockerasmus.pdb.chain)
+---------------------------------
 
 .. autoclass:: dockerasmus.pdb.Chain
    :members:
 
 
-Residual
---------
+**Residual** (dockerasmus.pdb.residual)
+---------------------------------------
 
 .. autoclass:: dockerasmus.pdb.Residual
    :members:
 
 
-Atom
-----
+**Atom** (dockerasmus.pdb.atom)
+-------------------------------
 
 .. autoclass:: dockerasmus.pdb.Atom
    :members:
-
 
 
 .. toctree::
