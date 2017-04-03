@@ -304,6 +304,23 @@ class Protein(collections.OrderedDict):
             key = lambda a: a.distance_to(pos)
         )
 
+    def rmsd(self, other):
+        """
+        """
+        rmsd, length = 0, 0
+        if isinstance(other, Protein):
+            for atom, other_atom in zip(self.iteratoms(), other.iteratoms()):
+                rmsd += numpy.sum((atom.pos - other_atom.pos)**2)
+                length += 1
+        elif isinstance(other, (list, numpy.ndarray)):
+            for atom in self.iteratoms():
+                rmsd += numpy.sum((atom.pos - other)**2)
+                length += 1
+        else:
+            raise TypeError("other must be Protein, list or numpy.ndarray,"
+                            " not {}".format(type(other).__name__))
+        return (rmsd/length)**.5
+
     if six.PY3:
         def itervalues(self):
             return six.itervalues(self)
