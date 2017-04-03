@@ -38,15 +38,6 @@ def distance(u, v):
     ]
     return numpy.sqrt(sum(d_components))
 
-    #
-    # mx_arr_u = numpy.repeat(u, v.shape[0], axis=0)
-    # mx_arr_v = numpy.tile(v, (u.shape[0], 1))
-    # # Calculate vector of euclidian distance
-    # v_d = numpy.sqrt(numpy.sum((mx_arr_u-mx_arr_v)**2, axis=1))
-    # # Rearrange vector as a matrix where mx_d[i,j] is the distance between
-    # # the i-th atom of protein 1 and the j-th atom of protein 2
-    # return numpy.reshape(v_d, (u.shape[0], v.shape[0]))
-
 
 def normalized(a, axis=-1, order=2):
     """Return an array of normalized vectors.

@@ -2,8 +2,7 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-from ...utils.matrices import distance as distance_matrix
-
+from .distance import distance
 
 __all__ = [
     "epsilon", "distance", "vdw_radius", "charge", "ocn_atoms_positions",
@@ -12,13 +11,6 @@ __all__ = [
 
 def epsilon(protein1, protein2):
     return protein1.atom_epsilon(), protein2.atom_epsilon()
-
-
-def distance(protein1, protein2):
-    return distance_matrix(
-        protein1.atom_positions(),
-        protein2.atom_positions()
-    )
 
 
 def vdw_radius(protein1, protein2):
