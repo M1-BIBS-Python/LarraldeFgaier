@@ -10,6 +10,12 @@ except:
 
 
 def distance(protein1, protein2):
+    """The euclidean distances of ``protein1`` atoms to ``protein2`` atoms.
+
+    .. hint::
+        If available, the distance matrix will be computed using
+        `scipy.spatial.distance.cdist`. *Speedup is substantial !*
+    """
     return _dist(
         protein1.atom_positions(),
         protein2.atom_positions(),

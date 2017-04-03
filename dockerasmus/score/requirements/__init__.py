@@ -10,18 +10,26 @@ __all__ = [
 
 
 def epsilon(protein1, protein2):
+    """The :math:`\epsilon` of the atoms of ``protein1`` and ``protein2``.
+    """
     return protein1.atom_epsilon(), protein2.atom_epsilon()
 
 
 def vdw_radius(protein1, protein2):
+    """The Van der Waals radius of the atoms of ``protein1`` and ``protein2``.
+    """
     return protein1.atom_radius(), protein2.atom_radius()
 
 
 def charge(protein1, protein2):
+    """The charge of the atoms of ``protein1`` and ``protein2``.
+    """
     return protein1.atom_charges(), protein2.atom_charges()
 
 
 def ocn_atoms_positions(protein1, protein2):
+    """The positions of *O*, *C* and *N* atoms in ``protein1`` and ``protein2``.
+    """
     import numpy
 
     return (
