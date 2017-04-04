@@ -84,11 +84,13 @@ class TestMethods(TestProtein):
         arginine1 = self.arginine_prot
         arginine2 = arginine1.copy()
 
-        for atom1, atom2 in zip(arginine1.iteratoms(), arginine2.iteratoms()):
-            self.assertEqual(atom1, atom2)
-            self.assertIsNot(atom1, atom2)
-            atom1.x += 1
-            self.assertNotEqual(atom1, atom2)
+        for chain1, chain2 in zip(arginine1.itervalues(), arginine2.itervalues()):
+            for res1, res2 in zip(chain1.itervalues(), chain2.itervalues()):
+                for atom_id in res1:
+                    self.assertEqual(res1[atom_id], res2[atom_id])
+                    self.assertIsNot(res1[atom_id], res2[atom_id])
+                    res1[atom_id].x += 1
+                    self.assertNotEqual(res1[atom_id], res2[atom_id])
 
     def test_rmsd_ref(self):
         ## rmsd = sqrt(0.5[(0-0)²+(0-0)²+(0-0)²+(0-0)²+(0-0)²+(1-0)²])
