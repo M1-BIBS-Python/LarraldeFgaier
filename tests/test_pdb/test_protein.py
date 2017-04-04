@@ -6,6 +6,7 @@ import os
 import unittest
 
 from dockerasmus.pdb import Protein, Chain, Atom, Residual
+from dockerasmus.constants import ATOMIC_MASSES
 
 from ..utils import DATADIR
 
@@ -14,12 +15,36 @@ class TestProtein(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        ## A protein made only of one arginine
         cls.arginine_prot = Protein.from_pdb_file(
             os.path.join(DATADIR, 'arginine.pdb')
         )
+        ## An unrealistic protein, which properties
+        ## are easy to compute manually
+        cls.prot = Protein(chains={
+            'A': Chain('A', residuals={
+                1: Residual(1, atoms={
+                    'C1': Atom(0, 0, 0, 1, 'C1'),
+                    'C2': Atom(0, 0, 1, 2, 'C2')
+                })
+            })
+        })
+
+
+class TestProperties(TestProtein):
+
+    def test_mass(self):
+        self.assertEqual(self.prot.mass, 2*ATOMIC_MASSES['C'])
+
+    def test_mass_center(self):
+        self.assertEqual(list(self.prot.mass_center), [0, 0, .5])
+
+    def test_radius(self):
+        self.assertEqual(self.prot.radius, .5)
 
 
 class TestMagicMethods(TestProtein):
+    ## TODO: test_getitem
 
     def test_contains_chain(self):
         self.assertIn(self.arginine_prot['A'], self.arginine_prot)
@@ -46,10 +71,6 @@ class TestMagicMethods(TestProtein):
             _ = object() in self.arginine_prot
 
 
-
-
-
-
 class TestMethods(TestProtein):
 
     def test_nearest_atom(self):
@@ -58,3 +79,54 @@ class TestMethods(TestProtein):
 
         pos2 = [12.924, 87.357, 96.42]
         self.assertEqual(self.arginine_prot.nearest_atom(pos2).id, 38)
+
+    def test_copy(self):
+        arginine1 = self.arginine_prot
+        arginine2 = arginine1.copy()
+
+        for atom1, atom2 in zip(arginine1.iteratoms(), arginine2.iteratoms()):
+            self.assertEqual(atom1, atom2)
+            self.assertIsNot(atom1, atom2)
+            atom1.x += 1
+            self.assertNotEqual(atom1, atom2)
+
+    def test_rmsd_ref(self):
+        ## rmsd = sqrt(0.5[(0-0)²+(0-0)²+(0-0)²+(0-0)²+(0-0)²+(1-0)²])
+        ##      = sqrt(0.5 * 1²) = sqrt(0.5)
+        self.assertEqual(self.prot.rmsd([0,0,0]), (.5)**.5)
+
+    def test_rmsd_prot(self):
+        self.assertEqual(self.prot.rmsd(self.prot), 0)
+
+    def test_rmsd_othertype(self):
+        with self.assertRaises(TypeError):
+            _ = self.prot.rmsd(1)
+        with self.assertRaises(TypeError):
+            _ = self.prot.rmsd("test")
+
+    def test_contact_map_nearest(self):
+        self.assertEqual( ## Nearest atom are identical
+            self.prot.contact_map(self.prot, mode='nearest')[1,1],
+            0,
+        )
+
+    def test_contact_map_farthest(self):
+        self.assertEqual(
+            self.prot.contact_map(self.prot, mode='farthest')[1,1],
+            1,
+        )
+
+
+    def test_contact_map_mass_center(self):
+        self.assertEqual( ## Same mass center
+            self.prot.contact_map(self.prot, mode='mass_center')[1,1],
+            0,
+        )
+
+    def test_contact_map_othermode(self):
+        with self.assertRaises(ValueError):
+            _ = self.prot.contact_map(self.prot, mode='rubbish')
+
+    def test_contact_map_othertype(self):
+        with self.assertRaises(TypeError):
+            _ = self.prot.contact_map(1)

@@ -1,6 +1,7 @@
 # coding: utf-8
 from __future__ import absolute_import
 from __future__ import unicode_literals
+from __future__ import division
 
 import collections
 import six
@@ -258,6 +259,9 @@ class Protein(collections.OrderedDict):
         """
         if not mode in self._CMAP_MODES:
             raise ValueError("Unknown mode: '{}'".format(mode))
+        if not isinstance(other, Protein):
+            raise TypeError("other must be a Protein,"
+                            " not {}".format(type(other).__name__))
 
         dim_x = max(r.id for chain in self.itervalues() for r in chain.itervalues())
         dim_y = max(r.id for chain in other.itervalues() for r in chain.itervalues())
