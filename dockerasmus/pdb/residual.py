@@ -30,7 +30,7 @@ class Residual(dict):
         if isinstance(item, six.text_type):
             return super(Residual, self).__contains__(item)
         elif isinstance(item, Atom):
-            return any(item==atom for atom in self.itervalues())
+            return any(item == atom for atom in self.itervalues())
         elif isinstance(item, int):
             return any(item == atom.id for atom in self.itervalues())
 

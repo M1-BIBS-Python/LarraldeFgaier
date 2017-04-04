@@ -111,12 +111,12 @@ class Protein(collections.OrderedDict):
         self._atom_radius = None
 
     def __contains__(self, item):
-        if isinstance(item, Chain):
+        if isinstance(item, six.text_type):
             return super(Protein, self).__contains__(item)
         elif isinstance(item, (Residual, Atom)):
-            return any(item in chain for chain in self)
-        elif isinstance(item, six.text_type):
-            return any(item == chain.id for chain in self.itervalues())
+            return any(item in chain for chain in self.itervalues())
+        elif isinstance(item, Chain):
+            return super(Protein, self).__contains__(item.id)
         else:
             raise TypeError(
                 "'in <Protein>' requires Chain, Residual, Atom or unicode"
