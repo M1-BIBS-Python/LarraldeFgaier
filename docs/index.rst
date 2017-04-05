@@ -20,8 +20,8 @@ dockerasmus
    :target: https://choosealicense.com/licenses/gpl-3.0/
 
 
-dockerasmus is a Python version-agnostic module that was created to
-quickly solve docking problems, as part of a Python assignment from
+``dockerasmus`` is a version-agnostic Python module that was created
+to quickly solve docking problems, as part of a Python assignment from
 the M1 BIBS of the Université Paris-Saclay.
 
 Dockerasmus provides a generic implementation of a scoring function,
@@ -32,7 +32,7 @@ every scoring component can be rewritten with any library supporting
 
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    examples
    supported
