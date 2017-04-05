@@ -107,10 +107,10 @@ html_theme = 'basicstrap'
 # documentation.
 #
 html_theme_options = {
-    'header_inverse': False,
-    'relbar_inverse': False,
+    'header_inverse': True,
+    'relbar_inverse': True,
     'inner_theme': True,
-    'inner_theme_name': 'bootswatch-cosmo',
+    'inner_theme_name': 'bootswatch-simplex',
     'theme_preview': False,
 }
 
