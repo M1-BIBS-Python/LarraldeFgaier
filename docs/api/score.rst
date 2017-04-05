@@ -1,14 +1,14 @@
 Scoring Functions (**dockerasmus.score**)
 =========================================
 
-**Generalized Scoring Function**
---------------------------------
+Generalized Scoring Function
+----------------------------
 
 .. autoclass::  dockerasmus.score.ScoringFunction
    :members:
 
 
-**Components** (dockerasmus.score.components)
+Components (**dockerasmus.score.components**)
 ---------------------------------------------
 
 .. autoclass:: dockerasmus.score.components.LennardJones
@@ -21,7 +21,7 @@ Scoring Functions (**dockerasmus.score**)
    :members: __call__
 
 
-**Requirements** (dockerasmus.score.requirements)
+Requirements (**dockerasmus.score.requirements**)
 -------------------------------------------------
 
 .. automodule:: dockerasmus.score.requirements
