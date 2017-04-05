@@ -1,8 +1,8 @@
-Dockerasmus
+dockerasmus
 =======================================
 *docking itself through university*
 
-|docs| |build| |coverage|
+|docs| |gl| |build| |coverage| |license|
 
 .. |docs| image:: http://readthedocs.org/projects/dockerasmus/badge/?version=latest
    :target: http://dockerasmus.readthedocs.io/en/latest/?badge=latest
@@ -13,30 +13,29 @@ Dockerasmus
 .. |coverage| image:: https://codecov.io/gl/althonos/dockerasmus/branch/master/graph/badge.svg?token=eNxJwF5lhn
    :target: https://codecov.io/gl/althonos/dockerasmus
 
+.. |gl| image:: _static/repository-gitlab-orange.svg
+   :target: https://gitlab.com/althonos/dockerasmus
+
+.. |license| image:: _static/license-GPLv3-blue.svg
+   :target: https://choosealicense.com/licenses/gpl-3.0/
 
 
-
-Dockerasmus is a Python version-agnostic module that was created to
+dockerasmus is a Python version-agnostic module that was created to
 quickly solve docking problems, as part of a Python assignment from
 the M1 BIBS of the Université Paris-Saclay.
 
 Dockerasmus provides a generic implementation of a scoring function,
 which can be used with several *components* to compute the score of
 a docking conformation of two proteins. It is backend agnostic, and
-any component can be rewritten with another library.
-
-
-
-
-
-
-
-
+every scoring component can be rewritten with any library supporting
+``numpy`` arrays.
 
 
 .. toctree::
    :maxdepth: 2
 
+   examples
+   supported
    api/index
 
 

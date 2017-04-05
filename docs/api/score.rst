@@ -1,4 +1,4 @@
-**Scoring Functions** (dockerasmus.score)
+Scoring Functions (**dockerasmus.score**)
 =========================================
 
 **Generalized Scoring Function**

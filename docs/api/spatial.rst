@@ -1,4 +1,4 @@
-**Spatial transformations** (dockerasmus.spatial)
+Spatial transformations (**dockerasmus.spatial**)
 =================================================
 
 

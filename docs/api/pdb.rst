@@ -1,4 +1,4 @@
-**Protein Data Bank objects** (dockerasmus.pdb)
+Protein Data Bank objects (**dockerasmus.pdb**)
 ===============================================
 
 **Protein** (dockerasmus.pdb.protein)
