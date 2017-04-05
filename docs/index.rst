@@ -10,7 +10,7 @@ dockerasmus
 .. |build| image:: https://gitlab.com/althonos/dockerasmus/badges/master/build.svg
    :target: https://gitlab.com/althonos/dockerasmus/pipelines?scope=branches
 
-.. |coverage| image:: https://codecov.io/gl/althonos/dockerasmus/branch/master/graph/badge.svg?token=eNxJwF5lhn
+.. |coverage| image:: https://img.shields.io/codecov/c/token/eNxJwF5lhn/gitlab/althonos/dockerasmus.svg
    :target: https://codecov.io/gl/althonos/dockerasmus
 
 .. |gl| image:: _static/repository-gitlab-orange.svg
