@@ -297,7 +297,7 @@ class Protein(collections.OrderedDict):
         """
         for chain in self.itervalues():
             for residual in chain.itervalues():
-                for atom in residual.itervalues():
+                for atom in sorted(residual.itervalues(), key=lambda a: a.id):
                     yield atom
 
     def nearest_atom(self, pos):
