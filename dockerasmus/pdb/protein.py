@@ -33,7 +33,7 @@ class Protein(collections.OrderedDict):
         """Return a raw `dict` with atom properties from a pdb atom line.
 
         Returns:
-            dict: a dictionary which keys are: ``serial``, ``name``,
+            `dict`: a dictionary which keys are: ``serial``, ``name``,
                 ``chainID``, ``altLoc``, ``resName``, ``resSeq``,
                 ``iCode``, ``x``, ``y`` and ``z``.
         """
@@ -291,9 +291,8 @@ class Protein(collections.OrderedDict):
         """Yield every atom in ``self``.
 
         Yields:
-            `dockerasmus.pdb.Atom`: every atom of the protein,
-            ordered by the id of their chain and the id
-            of their residual.
+            `Atom`: every atom of the protein, ordered by
+            the id of their chain and the id of their residual.
         """
         for chain in self.itervalues():
             for residual in chain.itervalues():

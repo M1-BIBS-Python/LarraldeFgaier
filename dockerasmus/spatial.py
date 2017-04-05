@@ -55,12 +55,12 @@ def transform_cartesian(protein, x=0, y=0, z=0, sigma=0, rho=0):
             rotate in the worldspace.
 
     Keyword Arguments:
-        x (int): the x cartesian coordinate to move the protein to
-        y (int): the y cartesian coordinate to move the protein to
-        z (int): the z cartesian coordinate to move the protein to
-        sigma (int): the angle to rotate the protein along the x axis,
+        x (`int`): the x cartesian coordinate to move the protein to
+        y (`int`): the y cartesian coordinate to move the protein to
+        z (`int`): the z cartesian coordinate to move the protein to
+        sigma (`int`): the angle to rotate the protein along the x axis,
             **in radians**
-        rho (int): the angle to rotate the protein along the y axis,
+        rho (`int`): the angle to rotate the protein along the y axis,
             **in radians**
     """
     matrix = RotationMatrix(sigma, rho).dot(TranslationMatrix(x, y, z))
@@ -75,12 +75,12 @@ def transform_spherical(protein, r=0, phi=0, theta=0, sigma=0, rho=0):
             rotate in the worldspace.
 
     Keyword Arguments:
-        r (int): the radial distance to move the protein to.
-        phi (int): the inclination to move the protein to.
-        theta (int): the azimuth to move the protein to.
-        sigma (int): the angle to rotate the protein along the x axis,
+        r (`int`): the radial distance to move the protein to.
+        phi (`int`): the inclination to move the protein to.
+        theta (`int`): the azimuth to move the protein to.
+        sigma (`int`): the angle to rotate the protein along the x axis,
             **in radians**.
-        rho (int): the angle to rotate the protein along the y axis,
+        rho (`int`): the angle to rotate the protein along the y axis,
             **in radians**.
     """
     x = r * numpy.sin(phi) * numpy.cos(theta)

@@ -24,7 +24,7 @@ class Atom(object):
             name (`str`): the name of the atom element ('C',
                 'CA', 'O', etc.). Giving a name to the Atom is
                 required to access to the `mass` property.
-            residual (`dockerasmus.pdb.residual`): a reference
+            residual (`Residual`): a reference
                 to the residual this atom is part of. Giving
                 a reference to the residual of the Atom is
                 required to access to the `charge`, `epsilon`
@@ -54,7 +54,7 @@ class Atom(object):
 
     @property
     def epsilon(self):
-        r"""The :math:`\epsilon` of the atom (_empirical_).
+        r"""The :math:`\epsilon` of the atom (*empirical*).
 
         See Also:
             `dockerasmus.score.components.LennardJones`
@@ -76,7 +76,7 @@ class Atom(object):
 
     @property
     def radius(self):
-        """The optimal Van der Waals radius of the atom (_empirical_).
+        """The optimal Van der Waals radius of the atom (*empirical*).
         """
         return self._read_from_constants(constants.AMINOACID_RADIUS)
 
@@ -91,7 +91,7 @@ class Atom(object):
         """Computes the distance to ``other``.
 
         Arguments:
-            other (numpy.array): the position to compute the
+            other (`numpy.ndarray`): the position to compute the
                 distance to (must be array-like of dimension 3)
         """
         if len(other) != 3:

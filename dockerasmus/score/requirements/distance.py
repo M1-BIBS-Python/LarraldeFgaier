@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 
 try:
     from scipy.spatial.distance import cdist as _dist
-except:
+except ImportError:
     from ...utils.matrices import distance as _dist
 
 
