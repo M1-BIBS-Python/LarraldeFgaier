@@ -24,11 +24,10 @@ class Atom(object):
             name (`str`): the name of the atom element ('C',
                 'CA', 'O', etc.). Giving a name to the Atom is
                 required to access to the `mass` property.
-            residual (`Residual`): a reference
-                to the residual this atom is part of. Giving
-                a reference to the residual of the Atom is
-                required to access to the `charge`, `epsilon`
-                and `radius` properties.
+            residual (`Residual`): a reference to the residual
+                this atom is part of. Giving a reference to
+                the residual of the Atom is required to access
+                the `charge`, `epsilon` and `radius` properties.
         """
         self.id = id
         self.name = name
