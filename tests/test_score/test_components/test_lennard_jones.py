@@ -5,6 +5,7 @@ from __future__ import division
 
 import unittest
 import numpy
+import collections
 
 from dockerasmus.pdb import Protein, Chain, Residual, Atom
 from dockerasmus.score import ScoringFunction
@@ -68,13 +69,19 @@ class TestLennardJones(unittest.TestCase):
         )
 
     def test_wrapped(self):
-        A = Atom(0, 0, 0, 1)
-        B = Atom(1, 0, 0, 2)
-        C = Atom(0, 1, 0, 3)
-        D = Atom(1, 1, 0, 4)
+        a = Atom(0, 0, 0, 1)
+        b = Atom(1, 0, 0, 2)
+        c = Atom(0, 1, 0, 3)
+        d = Atom(1, 1, 0, 4)
 
-        prot1 = Protein(chains={'A': Chain('A', residuals={1: Residual(1, atoms={'A':A, 'B':B})})})
-        prot2 = Protein(chains={'A': Chain('A', residuals={1: Residual(1, atoms={'C':C, 'D':D})})})
+        r1 = Residual(1, atoms=collections.OrderedDict([('A', a), ('B', b)]))
+        r2 = Residual(2, atoms=collections.OrderedDict([('C', c), ('D', d)]))
+
+        c1 = Chain('A', residuals=collections.OrderedDict([(1, r1)]))
+        c2 = Chain('A', residuals=collections.OrderedDict([(2, r2)]))
+
+        prot1 = Protein(chains=collections.OrderedDict([('A', c1)]))
+        prot2 = Protein(chains=collections.OrderedDict([('A', c2)]))
 
         with mock.patch('dockerasmus.pdb.Atom.epsilon',
                         new_callable=mock.PropertyMock,
