@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 import os
 import unittest
+import collections
 
 from dockerasmus.pdb import Protein, Chain, Atom, Residual
 from dockerasmus.constants import ATOMIC_MASSES
@@ -75,11 +76,18 @@ class TestMagicMethods(TestProtein):
             _ = self.prot[40]
 
     def test_getitem_wordslice(self):
-        prot_1 = Protein(chains={'B': self.chain_b, 'C': self.chain_c, 'D': self.chain_d})
-        prot_2 = Protein(chains={'B': self.chain_b, 'C': self.chain_c})
-        prot_3 = Protein(chains={'C': self.chain_c, 'D': self.chain_d})
-        prot_4 = Protein(chains={'B': self.chain_b})
-
+        prot_1 = Protein(chains=collections.OrderedDict([
+            ('B', self.chain_b), ('C', self.chain_c), ('D', self.chain_d)
+        ]))
+        prot_2 = Protein(chains=collections.OrderedDict([
+            ('B', self.chain_b), ('C', self.chain_c),
+        ]))
+        prot_3 = Protein(chains=collections.OrderedDict([
+            ('C', self.chain_c), ('D', self.chain_d)
+        ]))
+        prot_4 = Protein(chains=collections.OrderedDict([
+            ('B', self.chain_b),
+        ]))
 
         self.assertEqual(self.prot[:], prot_1)
         self.assertEqual(self.prot[:'D'], prot_2)
@@ -146,7 +154,7 @@ class TestMethods(TestProtein):
 
     def test_iteratoms(self):
         self.assertEqual(
-            list(self.prot.iteratoms()),
+            sorted(self.prot.iteratoms(), key=lambda a: a.id),
             [self.prot['A'][1]['C1'],
              self.prot['A'][1]['C2']]
         )

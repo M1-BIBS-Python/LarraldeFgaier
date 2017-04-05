@@ -28,35 +28,39 @@ class BaseComponent(object):
     """
 
     backends = []
-    _args, _kwargs = None, None
+
+
+    @classmethod
+    def _make_argspec(cls):
+        spec = utils.getargspec(cls.__call__)
+        if spec.defaults is None:
+            cls._args = args = spec.args[1:]
+            cls._kwargs = kwargs = []
+        else:
+            cls._args = args = spec.args[1:-len(spec.defaults)]
+            cls._kwargs = kwargs = spec.args[-len(spec.defaults):]
+        return args, kwargs
 
     @classmethod
     def kwargs(cls):
         """The list of __call__ keyword arguments.
         """
-        if cls._kwargs is None:
-            signature = inspect.signature(cls.__call__)
-            cls._kwargs = [
-                argname
-                    for argname, arg in signature.parameters.items()
-                        if arg.default != arg.empty
-            ]
-        return cls._kwargs
-
+        try:
+            kwargs = cls._kwargs
+        except AttributeError:
+            _, kwargs = cls._make_argspec()
+        finally:
+            return kwargs
 
     @classmethod
     def args(cls):
         """The list of __call__ positional arguments.
         """
-        if cls._args is None:
-            signature = inspect.signature(cls.__call__)
-            cls._args = [
-                argname
-                    for argname, arg in signature.parameters.items()
-                        if arg.default == arg.empty
-                            and arg.name != "self"
-            ]
-        return cls._args
+        try:
+            args = cls._args
+        except AttributeError:
+            args, _ = cls._make_argspec()
+        return args
 
     def __init__(self, force_backend=None):
 

@@ -3,13 +3,20 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import importlib
+import six
+import inspect
 
 from . import decorators
 from . import iterators
 from . import matrices
 
 
-__all__ = ["decorators", "iterators", "matrices", "maybe_import"]
+
+
+__all__ = ["decorators", "iterators", "matrices", "maybe_import", "getargspec"]
+
+
+getargspec = inspect.getargspec if six.PY2 else inspect.getfullargspec
 
 
 def maybe_import(module_name):
