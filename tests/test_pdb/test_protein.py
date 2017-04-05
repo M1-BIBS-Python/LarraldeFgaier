@@ -46,6 +46,46 @@ class TestProperties(TestProtein):
 class TestMagicMethods(TestProtein):
     ## TODO: test_getitem
 
+    def setUp(self):
+        ## Custom made protein with elements accessible
+        ## outside of prot.__getitem__
+        self.atom_1 = Atom(0,0,0,1)
+        self.atom_2 = Atom(1,0,0,2)
+        self.atom_3 = Atom(0,1,0,3)
+        self.atom_4 = Atom(0,0,1,4)
+        self.res_1 = Residual(1, atoms={'C1': self.atom_1, 'C2': self.atom_2})
+        self.res_2 = Residual(2, atoms={'C1': self.atom_3})
+        self.res_3 = Residual(3, atoms={'C1': self.atom_4})
+        self.chain_b = Chain('B', residuals={1: self.res_1})
+        self.chain_c = Chain('C', residuals={2: self.res_2})
+        self.chain_d = Chain('D', residuals={3: self.res_3})
+        self.prot = Protein(chains={'B': self.chain_b, 'C': self.chain_c,
+                                    'D': self.chain_d})
+
+    def test_getitem_simple(self):
+        self.assertEqual(self.prot['B'], self.chain_b)
+        self.assertEqual(self.prot['D'], self.chain_d)
+        with self.assertRaises(KeyError):
+            _ = self.prot['A']
+
+    def test_getitem_atom_id(self):
+        self.assertEqual(self.prot[1], self.atom_1)
+        self.assertEqual(self.prot[4], self.atom_4)
+        with self.assertRaises(KeyError):
+            _ = self.prot[40]
+
+    def test_getitem_wordslice(self):
+        prot_1 = Protein(chains={'B': self.chain_b, 'C': self.chain_c, 'D': self.chain_d})
+        prot_2 = Protein(chains={'B': self.chain_b, 'C': self.chain_c})
+        prot_3 = Protein(chains={'C': self.chain_c, 'D': self.chain_d})
+        prot_4 = Protein(chains={'B': self.chain_b})
+
+
+        self.assertEqual(self.prot[:], prot_1)
+        self.assertEqual(self.prot[:'D'], prot_2)
+        self.assertEqual(self.prot['C':], prot_3)
+        self.assertEqual(self.prot['B':'C'], prot_4)
+
     def test_contains_chain(self):
         self.assertIn(self.arginine_prot['A'], self.arginine_prot)
         self.assertNotIn(Chain('B'), self.arginine_prot)
@@ -91,6 +131,25 @@ class TestMethods(TestProtein):
                     self.assertIsNot(res1[atom_id], res2[atom_id])
                     res1[atom_id].x += 1
                     self.assertNotEqual(res1[atom_id], res2[atom_id])
+
+    def test_iteritems(self):
+        self.assertEqual(
+            list(self.arginine_prot.iteritems()),
+            [('A', self.arginine_prot['A'])],
+        )
+
+    def test_itervalues(self):
+        self.assertEqual(
+            list(self.arginine_prot.itervalues()),
+            [self.arginine_prot['A']],
+        )
+
+    def test_iteratoms(self):
+        self.assertEqual(
+            list(self.prot.iteratoms()),
+            [self.prot['A'][1]['C1'],
+             self.prot['A'][1]['C2']]
+        )
 
     def test_rmsd_ref(self):
         ## rmsd = sqrt(0.5[(0-0)²+(0-0)²+(0-0)²+(0-0)²+(0-0)²+(1-0)²])

@@ -142,10 +142,10 @@ class Protein(collections.OrderedDict):
         if isinstance(item, slice):
             stop = item.stop or iterators.nth(iterators.wordrange(max(self.keys())), 1)
             start = item.start or min(self.keys())
-            return Protein(chains={
-                k:super(Protein, self).__getitem__(k)
+            return Protein(chains=collections.OrderedDict([
+                (k, super(Protein, self).__getitem__(k))
                     for k in iterators.wordrange(start, stop)
-            })
+            ]))
         elif isinstance(item, int):
             atom = next((atom for atom in self.iteratoms() if atom.id==item), None)
             if atom is None:
@@ -279,13 +279,13 @@ class Protein(collections.OrderedDict):
     def copy(self):
         """Return a deep copy of ``self``.
         """
-        return Protein(self.id, self.name, {
-            chain.id: Chain(chain.id, chain.name, {
-                residual.id: copy.deepcopy(residual)
+        return Protein(self.id, self.name, collections.OrderedDict([
+            (chain.id, Chain(chain.id, chain.name, collections.OrderedDict([
+                (residual.id, copy.deepcopy(residual))
                     for residual in chain.itervalues()
-            })
+            ])))
                 for chain in self.itervalues()
-        })
+        ]))
 
     def iteratoms(self):
         """Yield every atom in ``self``.
