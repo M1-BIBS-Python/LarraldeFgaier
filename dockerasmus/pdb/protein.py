@@ -116,10 +116,10 @@ class Protein(collections.OrderedDict):
 
         Example:
             >>> sorted(barnase.keys())
-            ['B']
+            [u'B']
             >>> complex = barnase + barstar
             >>> sorted(complex.keys())
-            ['B', 'D']
+            [u'B', u'D']
 
         Raises:
             ValueError: when there's an ID collision with
@@ -131,6 +131,15 @@ class Protein(collections.OrderedDict):
 
     def __iadd__(self, other):
         """Complex the Protein with ``other``.
+
+        Example:
+            >>> prot = Protein()
+            >>> prot += barnase
+            >>> sorted(prot.keys())
+            [u'B']
+            >>> prot += barstar
+            >>> sorted(prot.keys())
+            [u'B', u'D']
 
         Raises:
             ValueError: when there's an ID collision with
