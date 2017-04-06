@@ -111,6 +111,56 @@ class Protein(collections.OrderedDict):
         self._atom_positions = None
         self._atom_radius = None
 
+    def __add__(self, other):
+        """Return a new Protein complexed with ``other``.
+
+        Example:
+            >>> sorted(barnase.keys())
+            ['B']
+            >>> complex = barnase + barstar
+            >>> sorted(complex.keys())
+            ['B', 'D']
+
+        Raises:
+            ValueError: when there's an ID collision with
+                the chain or the protein
+            TypeError: when ``other`` is neither a `Chain`
+                nor a `Protein`.
+        """
+        return self.copy().__iadd__(other)
+
+    def __iadd__(self, other):
+        """Complex the Protein with ``other``.
+
+        Raises:
+            ValueError: when there's an ID collision with
+                the chain or the protein
+            TypeError: when ``other`` is neither a `Chain`
+                nor a `Protein`.
+        """
+        if isinstance(other, Chain):
+            if other.id in self:
+                raise ValueError(
+                    'Protein already contains a chain'
+                    'with id {} !'.format(other.id)
+                )
+            self[other.id] = other
+        elif isinstance(other, Protein):
+            if not set(self.keys()).isdisjoint(other.keys()):
+                common_keys = set(self.keys()).intersection(other.keys())
+                raise ValueError(
+                    'Protein already contains a chain with id'
+                    ' {} !'.format(', '.join(common_keys))
+                )
+            self.update(other)
+        else:
+            raise TypeError(
+                "unsupported operand type(s) for +: 'Protein'"
+                " and '{}'".format(type(other).__name__)
+            )
+        return self
+
+
     def __contains__(self, item):
         if isinstance(item, six.text_type):
             return super(Protein, self).__contains__(item)

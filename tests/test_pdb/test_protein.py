@@ -118,6 +118,35 @@ class TestMagicMethods(TestProtein):
         with self.assertRaises(TypeError):
             _ = object() in self.arginine_prot
 
+    def test_iadd_protein(self):
+        test_prot = Protein()
+        test_prot += self.prot
+        self.assertEqual(set(test_prot), set(self.prot))
+
+    def test_iadd_chain(self):
+        test_prot = Protein()
+        test_prot += self.chain_b
+        self.assertEqual(set(test_prot), {'B'})
+
+    def test_iadd_same_chain(self):
+        test_prot = Protein(chains={'B': self.chain_b})
+        with self.assertRaises(ValueError):
+            test_prot += self.chain_b
+
+    def test_iadd_same_protein(self):
+        test_prot = Protein(chains={'B': self.chain_b})
+        with self.assertRaises(ValueError):
+            test_prot += self.prot
+
+    def test_iadd_othertype(self):
+        test_prot = Protein()
+        with self.assertRaises(TypeError):
+            test_prot += 1
+        with self.assertRaises(TypeError):
+            test_prot += "a"
+
+
+
 
 class TestMethods(TestProtein):
 
