@@ -30,7 +30,7 @@ class TestLennardJones(unittest.TestCase):
     #     x===============X
     #   C(id:1, x=0, y=1) D(id:2, x=1, y=1)
     #
-    #     epsilon =  1  1     radius = .5  .5  (so they sum to 1)
+    #         pwd =  1  1     radius = .5  .5  (so they sum to 1)
     #                1  1              .5  .5
     #
     #    distance =  1 √2   (since A->D = (1,1), B->C = (1,1)
@@ -39,8 +39,8 @@ class TestLennardJones(unittest.TestCase):
     # Since we're only summing for i>j, we only are
     # computing Van der Waals on B & C
     #
-    # a =     epsilon * radius¹² = 1
-    # b = 2 * epsilon * radius⁶  = 2
+    # a =     pwd * radius¹² = 1
+    # b = 2 * pwd * radius⁶  = 2
     # d = √2
     #
     # LJ = a/d^12  - b/d^6
@@ -83,7 +83,7 @@ class TestLennardJones(unittest.TestCase):
         prot1 = Protein(chains=collections.OrderedDict([('A', c1)]))
         prot2 = Protein(chains=collections.OrderedDict([('A', c2)]))
 
-        with mock.patch('dockerasmus.pdb.Atom.epsilon',
+        with mock.patch('dockerasmus.pdb.Atom.pwd',
                         new_callable=mock.PropertyMock,
                         return_value=1):
             with mock.patch('dockerasmus.pdb.Atom.radius',

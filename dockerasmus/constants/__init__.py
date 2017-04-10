@@ -9,8 +9,8 @@ _CSV = os.path.join(os.path.dirname(os.path.abspath(__file__)), "{}.csv")
 _transtype = lambda k,v: (k, float(v))
 
 
-with open(_CSV.format('atomic_epsilon'), 'rb') as f:
-    ATOMIC_EPSILON = dict(
+with open(_CSV.format('atomic_pwd'), 'rb') as f:
+    ATOMIC_POTENTIAL_WELL_DEPTH = dict(
         _transtype(*line.decode('utf-8').strip().split(','))
             for line in f
     )
@@ -42,13 +42,13 @@ with open(_CSV.format('aminoacid_charges'), 'rb') as f:
     }
 
 
-with open(_CSV.format('aminoacid_epsilon'), 'rb') as f:
+with open(_CSV.format('aminoacid_pwd'), 'rb') as f:
     headers = next(f).decode('utf-8').strip().split(',')[1:]
-    AMINOACID_EPSILON = {
+    AMINOACID_POTENTIAL_WELL_DEPTH = {
         line.split(',')[0]: {
-            atom: ATOMIC_EPSILON[ref]
+            atom: ATOMIC_POTENTIAL_WELL_DEPTH[ref]
                 for atom, ref in zip(headers, line.strip().split(',')[1:])
-                    if ref in ATOMIC_EPSILON
+                    if ref in ATOMIC_POTENTIAL_WELL_DEPTH
         }
         for line in (l.decode('utf-8').strip() for l in f)
     }

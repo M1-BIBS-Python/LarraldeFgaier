@@ -52,13 +52,13 @@ class Atom(object):
         return self._read_from_constants(constants.AMINOACID_CHARGES)
 
     @property
-    def epsilon(self):
-        r"""The :math:`\epsilon` of the atom (*empirical*).
+    def pwd(self):
+        """The well depth of the Lennard-Jones potential of the atom.
 
         See Also:
             `dockerasmus.score.components.LennardJones`
         """
-        return self._read_from_constants(constants.AMINOACID_EPSILON)
+        return self._read_from_constants(constants.AMINOACID_POTENTIAL_WELL_DEPTH)
 
     @property
     @method_requires(["name"], "Cannot find atom type !")

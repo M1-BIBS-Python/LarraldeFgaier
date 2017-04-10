@@ -107,7 +107,7 @@ class Protein(collections.OrderedDict):
 
         # Memoize matrices and vectors
         self._atom_charges = None
-        self._atom_epsilon = None
+        self._atom_pwd = None
         self._atom_positions = None
         self._atom_radius = None
 
@@ -274,14 +274,14 @@ class Protein(collections.OrderedDict):
             ])
         return self._atom_charges
 
-    def atom_epsilon(self):
-        """The vector of the epsilon value of each atom of the protein.
+    def atom_pwd(self):
+        """The vector of the potential well depth of each atom of the protein.
         """
-        if self._atom_epsilon is None:
-            self._atom_epsilon = numpy.array([
-                a.epsilon for a in self.iteratoms()
+        if self._atom_pwd is None:
+            self._atom_pwd = numpy.array([
+                a.pwd for a in self.iteratoms()
             ])
-        return self._atom_epsilon
+        return self._atom_pwd
 
     def atom_positions(self):
         """The matrix of the positions of each atom of the protein.

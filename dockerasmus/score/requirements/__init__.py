@@ -9,10 +9,10 @@ __all__ = [
 ]
 
 
-def epsilon(protein1, protein2):
+def potential_well_depth(protein1, protein2):
     """The :math:`\epsilon` of the atoms of ``protein1`` and ``protein2``.
     """
-    return protein1.atom_epsilon(), protein2.atom_epsilon()
+    return protein1.atom_pwd(), protein2.atom_pwd()
 
 
 def vdw_radius(protein1, protein2):
