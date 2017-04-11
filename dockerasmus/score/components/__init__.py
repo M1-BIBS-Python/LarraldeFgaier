@@ -5,3 +5,4 @@ from __future__ import unicode_literals
 from .lennard_jones import LennardJones
 from .coulomb import Coulomb
 from .fabiola import Fabiola
+from .screened_coulomb import ScreenedCoulomb
