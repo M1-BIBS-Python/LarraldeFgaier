@@ -40,9 +40,7 @@ class LennardJones(BaseComponent):
         ### Final function
         self._call = theano.function(
             [v_pwd1, v_pwd2, v_rad1, v_rad2, mx_distance],
-            theano.tensor.sum(theano.tensor.triu(
-                mx_A/(mx_distance**12) - mx_B/(mx_distance**6), k=1,
-            ))
+            theano.tensor.sum(mx_A/(mx_distance**12) - mx_B/(mx_distance**6))
         )
 
     def _setup_numpy(self, numpy):
@@ -58,9 +56,7 @@ class LennardJones(BaseComponent):
             ### Atomwise distance matrix
             mx_distance_6 = mx_distance**6
             ### Final function
-            return numpy.sum(numpy.triu(
-                mx_A/(mx_distance_6**2)-mx_B/(mx_distance_6), k=1,
-            ))
+            return numpy.sum(mx_A/(mx_distance_6**2)-mx_B/(mx_distance_6))
         self._call = call
 
     def __call__(self, potential_well_depth, vdw_radius, distance):

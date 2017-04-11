@@ -33,13 +33,13 @@ class ScoringFunction(object):
 
         >>> f = ScoringFunction(LennardJones, Coulomb)
         >>> f(barnase, barstar)
-        -22.4...
+        -84.9...
 
         Using weights on individual components:
 
         >>> g = ScoringFunction(LennardJones, Fabiola, weights=[1, 3])
         >>> g(barnase, barstar)
-        -49.1...
+        -111.6...
     """
 
     def __init__(self, *components, **kwargs):

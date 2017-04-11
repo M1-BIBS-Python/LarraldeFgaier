@@ -36,17 +36,14 @@ class TestLennardJones(unittest.TestCase):
     #    distance =  1 √2   (since A->D = (1,1), B->C = (1,1)
     #               √2  1      and A->C = (0,1), B->D = (0,1))
     #
-    # Since we're only summing for i>j, we only are
-    # computing Van der Waals on B & C
+    #    A = 1 and B = 2 for all pairs
     #
-    # a =     pwd * radius¹² = 1
-    # b = 2 * pwd * radius⁶  = 2
-    # d = √2
-    #
-    # LJ = a/d^12  - b/d^6
-    #    = 1/64 - 2/8
+    # LJ = (A/r_ij^12 - B/r_ij^6) for 0 =< i =< 1 for 0 =< j =< 1
+    #    = 2*(1/√2^12 - 2/√2^6) + 2*(1/1^12 - 2/1^6)
+    #    = 2*(1/64 - 2/8) - 2
 
 
+    expected = 1/32 - 1/2 -2
 
     def setUp(self):
         self.eps = numpy.array([[1, 1], [1, 1]])
@@ -58,14 +55,14 @@ class TestLennardJones(unittest.TestCase):
         lj = LennardJones(force_backend='numpy')
         self.assertAlmostEqual(
             float(lj(self.eps, self.vdw_radius, self.distance)),
-            1/64 - 2/8
+            self.expected,
         )
 
     def test_theano(self):
         lj = LennardJones(force_backend='theano')
         self.assertAlmostEqual(
             float(lj(self.eps, self.vdw_radius, self.distance)),
-            1/64 - 2/8
+            self.expected,
         )
 
     def test_wrapped(self):
@@ -90,4 +87,4 @@ class TestLennardJones(unittest.TestCase):
                             new_callable=mock.PropertyMock,
                             return_value=.5):
                 score_lj = ScoringFunction(LennardJones)
-                self.assertAlmostEqual(score_lj(prot1, prot2), 1/64 - 2/8)
+                self.assertAlmostEqual(score_lj(prot1, prot2), self.expected)

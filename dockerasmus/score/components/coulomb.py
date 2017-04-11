@@ -29,15 +29,13 @@ class Coulomb(BaseComponent):
         ### Final function
         self._call = theano.function(
             [v_q1, v_q2, mx_distance, diel],
-            theano.tensor.sum(theano.tensor.triu(
-                mx_q/(diel*mx_distance)
-            ))
+            theano.tensor.sum(mx_q/(diel*mx_distance))
         )
 
     def _setup_numpy(self, numpy):
         def call(v_q1, v_q2, mx_distance, diel):
             mx_q = numpy.outer(v_q1, v_q2)
-            return numpy.sum(numpy.triu(mx_q/(diel*mx_distance), 1))
+            return numpy.sum(mx_q/(diel*mx_distance))
         self._call = call
 
     def __call__(self, charge, distance, diel=65.0):
