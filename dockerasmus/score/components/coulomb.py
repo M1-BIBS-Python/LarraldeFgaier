@@ -15,7 +15,7 @@ class Coulomb(BaseComponent):
         l’Académie Royale des Sciences, 569-577 (1785).
         <https://books.google.com/books?id=by5EAAAAcAAJ&pg=PA569>`_
     """
-    backends = ["theano", "mxnet", "numpy"]
+    backends = ["theano", "tensorflow", "mxnet", "numpy"]
 
 
     def _setup_theano(self, theano):
@@ -46,6 +46,30 @@ class Coulomb(BaseComponent):
             ### Atomwise distance matrix
             return mxnet.nd.sum(mx_q / (diel*mx_distance)).asscalar()
         self._call = call
+
+    def _setup_tensorflow(self, tf):
+        tf_v_q1 = tf.placeholder(tf.float64)
+        tf_v_q2 = tf.placeholder(tf.float64)
+        tf_mx_distance = tf.placeholder(tf.float64)
+        tf_diel = tf.placeholder(tf.float64)
+
+        tf_mx_q = tf.matmul(
+            tf.expand_dims(tf_v_q1, -1),
+            tf.expand_dims(tf_v_q2, 0),
+        )
+        result = tf.reduce_sum(tf_mx_q / (tf_diel * tf_mx_distance))
+
+        def call(v_q1, v_q2, mx_distance, diel):
+            with tf.Session() as sess:
+                return sess.run(result, feed_dict={
+                    tf_v_q1: v_q1,
+                    tf_v_q2: v_q2,
+                    tf_mx_distance: mx_distance,
+                    tf_diel: diel,
+                })
+
+        self._call = call
+
 
     def _setup_numpy(self, numpy):
         def call(v_q1, v_q2, mx_distance, diel):

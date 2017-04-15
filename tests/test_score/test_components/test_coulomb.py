@@ -45,6 +45,7 @@ class TestCoulomb(unittest.TestCase):
     diel = 65.0
     expected = (2**.5 - 2) / (2*diel)
 
+
     def setUp(self):
         self.charges = numpy.array([[1, 2], [1, -1]])
         self.positions = [numpy.array([[0,0], [0,1]]),
@@ -64,6 +65,15 @@ class TestCoulomb(unittest.TestCase):
             float(cl(self.charges, self.distances)),
             self.expected,
         )
+
+    def test_tensorflow(self):
+        # Suppress annoying log
+        with mock.patch.dict('os.environ', {'TF_CPP_MIN_LOG_LEVEL': "3"}):
+            cl = Coulomb(force_backend='tensorflow')
+            self.assertAlmostEqual(
+                float(cl(self.charges, self.distances)),
+                self.expected,
+            )
 
     def test_theano(self):
         cl = Coulomb(force_backend='theano')
