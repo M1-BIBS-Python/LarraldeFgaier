@@ -58,6 +58,12 @@ class TestCoulomb(unittest.TestCase):
             self.expected,
         )
 
+    def test_mxnet(self):
+        cl = Coulomb(force_backend='mxnet')
+        self.assertAlmostEqual(
+            float(cl(self.charges, self.distances)),
+            self.expected,
+        )
 
     def test_theano(self):
         cl = Coulomb(force_backend='theano')
