@@ -6,6 +6,7 @@ from __future__ import division
 import unittest
 import numpy
 import collections
+import warnings
 
 from dockerasmus.pdb import Protein, Chain, Residual, Atom
 from dockerasmus.score import ScoringFunction
@@ -95,3 +96,10 @@ class TestCoulomb(unittest.TestCase):
         # test scoring
         score_lj = ScoringFunction(Coulomb)
         self.assertAlmostEqual(score_lj(prot1, prot2), self.expected)
+
+
+def setUpModule():
+    warnings.simplefilter('ignore', category=ImportWarning)
+
+def tearDownModule():
+    warnings.simplefilter(warnings.defaultaction)
