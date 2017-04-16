@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 import logging
 
 from . import requirements
+from .components.base import BaseComponent
 
 
 class ScoringFunction(object):
@@ -46,8 +47,14 @@ class ScoringFunction(object):
         self.components = []
         self.weights = kwargs.get('weights') or [1 for _ in range(len(components))]
         for component in components:
-            logging.debug("Initializing {}".format(component.__name__))
-            self.components.append(component())
+            if issubclass(component, BaseComponent):
+                logging.debug("Creating new {} instance...".format(component.__name__))
+                self.components.append(component())
+            elif isinstance(component, BaseComponent):
+                logging.debug("Registering {} instance...".format(component.__class__.__name__))
+                self.components.append(component)
+            else:
+                raise TypeError("Invalid component: {}".format(component))
         self.requirements = {
             req:getattr(requirements, req)
                 for c in components for req in c.args()
