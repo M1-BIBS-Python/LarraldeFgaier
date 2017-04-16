@@ -34,17 +34,15 @@ class Coulomb(BaseComponent):
 
     def _setup_mxnet(self, mxnet):
         def call(v_q1, v_q2, mx_distance, diel):
-            ### Convert input to mxnet NDArray
-            v_q1 = mxnet.nd.array(v_q1)
-            v_q2 = mxnet.nd.array(v_q2)
-            mx_distance = mxnet.nd.array(mx_distance)
             ### Charge matrix from protein vectors
             mx_q = mxnet.nd.dot(
-                v_q1.reshape((v_q1.shape[0],1)),
-                v_q2.reshape((1, v_q2.shape[0]))
+                mxnet.nd.expand_dims(mxnet.nd.array(v_q1), 1),
+                mxnet.nd.expand_dims(mxnet.nd.array(v_q2), 0)
             )
             ### Atomwise distance matrix
-            return mxnet.nd.sum(mx_q / (diel*mx_distance)).asscalar()
+            return mxnet.nd.sum(
+                mx_q / (diel*mxnet.nd.array(mx_distance))
+            ).asscalar()
         self._call = call
 
     def _setup_tensorflow(self, tf):

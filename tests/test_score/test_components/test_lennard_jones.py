@@ -6,6 +6,7 @@ from __future__ import division
 import unittest
 import numpy
 import collections
+import warnings
 
 from dockerasmus.pdb import Protein, Chain, Residual, Atom
 from dockerasmus.score import ScoringFunction
@@ -65,6 +66,13 @@ class TestLennardJones(unittest.TestCase):
             self.expected,
         )
 
+    def test_mxnet(self):
+        lj = LennardJones(force_backend='mxnet')
+        self.assertAlmostEqual(
+            float(lj(self.eps, self.vdw_radius, self.distance)),
+            self.expected,
+        )
+
     def test_wrapped(self):
         a = Atom(0, 0, 0, 1)
         b = Atom(1, 0, 0, 2)
@@ -88,3 +96,10 @@ class TestLennardJones(unittest.TestCase):
                             return_value=.5):
                 score_lj = ScoringFunction(LennardJones)
                 self.assertAlmostEqual(score_lj(prot1, prot2), self.expected)
+
+
+def setUpModule():
+    warnings.simplefilter('ignore', category=ImportWarning)
+
+def tearDownModule():
+    warnings.simplefilter(warnings.defaultaction)
