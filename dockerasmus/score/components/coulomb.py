@@ -70,6 +70,9 @@ class Coulomb(BaseComponent):
 
         self._call = call
 
+        # Stub call to force TF compiling the tensorial application
+        call([], [], [], 1)
+
 
     def _setup_numpy(self, numpy):
         def call(v_q1, v_q2, mx_distance, diel):
