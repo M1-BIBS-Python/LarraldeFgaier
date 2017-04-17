@@ -100,6 +100,7 @@ class TestLennardJones(unittest.TestCase):
 
 def setUpModule():
     warnings.simplefilter('ignore', category=ImportWarning)
+    warnings.simplefilter('ignore', category=DeprecationWarning)
 
 def tearDownModule():
     warnings.simplefilter(warnings.defaultaction)
