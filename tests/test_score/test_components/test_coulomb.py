@@ -13,7 +13,7 @@ from dockerasmus.score import ScoringFunction
 from dockerasmus.score.components import Coulomb
 from dockerasmus.utils.matrices import distance
 
-from ...utils import mock
+from ...utils import mock, suppress_tf_log
 
 
 class TestCoulomb(unittest.TestCase):
@@ -67,14 +67,13 @@ class TestCoulomb(unittest.TestCase):
             self.expected,
         )
 
+    @suppress_tf_log
     def test_tensorflow(self):
-        # Suppress annoying log
-        with mock.patch.dict('os.environ', {'TF_CPP_MIN_LOG_LEVEL': "3"}):
-            cl = Coulomb(force_backend='tensorflow')
-            self.assertAlmostEqual(
-                float(cl(self.charges, self.distances)),
-                self.expected,
-            )
+        cl = Coulomb(force_backend='tensorflow')
+        self.assertAlmostEqual(
+            float(cl(self.charges, self.distances)),
+            self.expected,
+        )
 
     def test_theano(self):
         cl = Coulomb(force_backend='theano')

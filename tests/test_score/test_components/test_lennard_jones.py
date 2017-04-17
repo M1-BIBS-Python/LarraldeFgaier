@@ -13,7 +13,7 @@ from dockerasmus.score import ScoringFunction
 from dockerasmus.score.components import LennardJones
 from dockerasmus.utils.matrices import distance
 
-from ...utils import mock
+from ...utils import mock, suppress_tf_log
 
 
 class TestLennardJones(unittest.TestCase):
@@ -61,6 +61,14 @@ class TestLennardJones(unittest.TestCase):
 
     def test_theano(self):
         lj = LennardJones(force_backend='theano')
+        self.assertAlmostEqual(
+            float(lj(self.eps, self.vdw_radius, self.distance)),
+            self.expected,
+        )
+
+    @suppress_tf_log
+    def test_tensorflow(self):
+        lj = LennardJones(force_backend='tensorflow')
         self.assertAlmostEqual(
             float(lj(self.eps, self.vdw_radius, self.distance)),
             self.expected,

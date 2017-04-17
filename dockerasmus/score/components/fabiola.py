@@ -60,9 +60,7 @@ class Fabiola(BaseComponent):
         # Matrice des distances entre le ieme O et le jeme N
         mx_distance = distance(mx_pos_o, mx_pos_n)
 
-        # Cutting power of the cosine
-
-        ######
+        ### Final function
         self._call = theano.function(
             [mx_pos_o, mx_pos_c, mx_pos_n, m, r_null, theta_low, theta_high],
             theano.tensor.sum(

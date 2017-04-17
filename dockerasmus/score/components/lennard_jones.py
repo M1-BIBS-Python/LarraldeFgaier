@@ -18,7 +18,7 @@ class LennardJones(BaseComponent):
         <https://dx.doi.org/10.1098%2Frspa.1924.0082>`_
     """
 
-    backends = ["theano", "mxnet", "numpy"]
+    backends = ["theano", "mxnet", "tensorflow", "numpy"]
 
     def _setup_theano(self, theano):
         ### Potential well depth matrix from protein vectors
@@ -60,12 +60,48 @@ class LennardJones(BaseComponent):
             return numpy.sum(mx_A/(mx_distance_6**2)-mx_B/(mx_distance_6))
         self._call = call
 
+    def _setup_tensorflow(self, tf):
+        tf_v_pwd1 = tf.placeholder(tf.float64)
+        tf_v_pwd2 = tf.placeholder(tf.float64)
+        tf_v_rad1 = tf.placeholder(tf.float64)
+        tf_v_rad2 = tf.placeholder(tf.float64)
+
+        mx_well_depth = tf.sqrt(tf.matmul(
+            tf.expand_dims(tf_v_pwd1, 1),
+            tf.expand_dims(tf_v_pwd2, 0),
+        ))
+        mx_radius_6 = (
+            tf.transpose(tf.expand_dims(tf_v_rad1, 0)) + tf_v_rad2
+        )**6
+        mx_B = 2 * mx_well_depth * mx_radius_6
+        mx_A = 0.5 * mx_B * mx_radius_6
+
+        tf_mx_distance = tf.placeholder(tf.float64)
+        mx_distance_6 = tf_mx_distance**6
+
+        result = tf.reduce_sum(mx_A/(mx_distance_6**2) - mx_B/mx_distance_6)
+
+        def call(v_pwd1, v_pwd2, v_rad1, v_rad2, mx_distance):
+            with tf.Session() as sess:
+                return sess.run(result, feed_dict={
+                    tf_v_pwd1: v_pwd1,
+                    tf_v_pwd2: v_pwd2,
+                    tf_v_rad1: v_rad1,
+                    tf_v_rad2: v_rad2,
+                    tf_mx_distance: mx_distance,
+                })
+
+        self._call = call
+
+        call([], [], [], [], [])
+
+
     def _setup_mxnet(self, mxnet):
         def call(v_pwd1, v_pwd2, v_rad1, v_rad2, mx_distance):
             ### Potential well depth matrix (sqrt of outer product)
             mx_well_depth = mxnet.ndarray.sqrt(mxnet.nd.dot(
-                    mxnet.nd.expand_dims(mxnet.nd.array(v_pwd1), 1),
-                    mxnet.nd.expand_dims(mxnet.nd.array(v_pwd2), 0),
+                mxnet.nd.expand_dims(mxnet.nd.array(v_pwd1), 1),
+                mxnet.nd.expand_dims(mxnet.nd.array(v_pwd2), 0),
             ))
             ### Radius matrix from protein vectors (to the power of 6)
             mx_radius_6 = (

@@ -39,7 +39,7 @@ class Coulomb(BaseComponent):
                 mxnet.nd.expand_dims(mxnet.nd.array(v_q1), 1),
                 mxnet.nd.expand_dims(mxnet.nd.array(v_q2), 0)
             )
-            ### Atomwise distance matrix
+            ### Final result
             return mxnet.nd.sum(
                 mx_q / (diel*mxnet.nd.array(mx_distance))
             ).asscalar()
