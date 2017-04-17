@@ -9,12 +9,11 @@ from .. import requirements
 class ScreenedCoulomb(BaseComponent):
     """A scoring component modeling screened electrostatic forces.
 
-    References:
+    Reference:
         `Mehler, E. L., and G. Eichele.
         “Electrostatic Effects in Water-Accessible Regions of Proteins.”
         Biochemistry 23, no. 17 (August 1, 1984): 3887–91.
         doi:10.1021/bi00312a015. <http://dx.doi.org/10.1021/bi00312a015>`_
-
     """
     backends = ["theano", "numpy"]
 
