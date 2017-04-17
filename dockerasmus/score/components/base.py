@@ -25,6 +25,17 @@ class BaseComponent(object):
     (Van der Waals interactions, Hydrogen bonds, electro
     -static forces or desolvation) and :math:`W_{i}`
     the weight associated to that component.
+
+    Warning:
+        Components can rely on several different backends, i.e.
+        libraries that handle linear algebra computations. Those
+        can and will likely handle floating point precision
+        differently, resulting in seemingly different results
+        from the same inputs. However, Components are tested
+        against manually computed cases, and code is verified
+        to be the same across all backends, so these errors
+        should only occur in Components with rapidly growing
+        functions (:math:`exp` and such).
     """
 
     backends = []
