@@ -40,7 +40,7 @@ class ScoringFunction(object):
 
         >>> g = ScoringFunction(LennardJones, Fabiola, weights=[1, 3])
         >>> g(barnase, barstar)
-        -111.6...
+        -118.54...
     """
 
     def __init__(self, *components, **kwargs):
