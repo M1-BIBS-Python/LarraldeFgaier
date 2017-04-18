@@ -7,6 +7,10 @@ __author_email__ = "martin.larralde@ens-cachan.fr"
 __version__ = "0.1.0"
 __license__ = "GPLv3"
 
-from . import pdb
-from . import score
-from . import utils
+try:
+    from . import pdb
+    from . import score
+    from . import utils
+except ImportError as import_error:
+    import warnings
+    warnings.warn(str(import_error), ImportWarning)
