@@ -34,14 +34,14 @@ def ocn_atoms_positions(protein1, protein2):
 
     return (
         # Position of O atoms
-        numpy.array([atom.pos for atom in protein1.iteratoms() if atom.name.startswith('O')]),
-        numpy.array([atom.pos for atom in protein2.iteratoms() if atom.name.startswith('O')]),
+        numpy.array([atom.pos for atom in protein1.iteratoms() if atom.name.startswith('O')] or numpy.zeros((0,3))),
+        numpy.array([atom.pos for atom in protein2.iteratoms() if atom.name.startswith('O')] or numpy.zeros((0,3))),
 
         # Positions of C atoms linked to each O atom
-        numpy.array([atom.nearest("C").pos for atom in protein1.iteratoms() if atom.name.startswith('O')]),
-        numpy.array([atom.nearest("C").pos for atom in protein2.iteratoms() if atom.name.startswith('O')]),
+        numpy.array([atom.nearest("C").pos for atom in protein1.iteratoms() if atom.name.startswith('O')] or numpy.zeros((0,3))),
+        numpy.array([atom.nearest("C").pos for atom in protein2.iteratoms() if atom.name.startswith('O')] or numpy.zeros((0,3))),
 
         # Positions of N atoms
-        numpy.array([atom.pos for atom in protein1.iteratoms() if atom.name.startswith('N')]),
-        numpy.array([atom.pos for atom in protein2.iteratoms() if atom.name.startswith('N')]),
+        numpy.array([atom.pos for atom in protein1.iteratoms() if atom.name.startswith('N')] or numpy.zeros((0,3))),
+        numpy.array([atom.pos for atom in protein2.iteratoms() if atom.name.startswith('N')] or numpy.zeros((0,3))),
     )
