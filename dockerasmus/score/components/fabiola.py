@@ -3,6 +3,8 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 from __future__ import division
 
+import math
+
 from .base import BaseComponent
 from .. import requirements
 
@@ -19,6 +21,9 @@ class Fabiola(BaseComponent):
 
     backends = ["theano", "numpy"]
 
+    ## FIXME: mx_arccos returns angle+pi (that's why numpy.pi is
+    ## substracted), something is wrong with algorithm (since same
+    ## issue occurs in both backend implementations)
 
     def _setup_theano(self, theano):
         from ...utils.tensors import normalized, distance
@@ -47,7 +52,7 @@ class Fabiola(BaseComponent):
         # Produit scalaire interne des coordonnees de chaque vecteur
         # O->N et O->C
         mx_cos = theano.tensor.sum(mx_vec_o_to_c*mx_vec_o_to_n, axis=-1)
-        mx_angles = theano.tensor.arccos(mx_cos)
+        mx_angles = math.pi - theano.tensor.arccos(mx_cos)
 
         # Matrice des deviations angulaires en prenant a chaque fois
         # le minimum de deviation avec theta_high et theta_low
@@ -82,10 +87,12 @@ class Fabiola(BaseComponent):
                 numpy.repeat(mx_pos_o, mx_pos_n.shape[0], axis=0)
                 - numpy.tile(mx_pos_n, (mx_pos_o.shape[0], 1))
             ).reshape((mx_pos_o.shape[0], mx_pos_n.shape[0], 3))
+
             # Produit scalaire interne des coordonnees de chaque vecteur
             # O->N et O->C
-            mx_cos = numpy.sum(mx_vec_o_to_c*mx_vec_o_to_n, axis=2)
-            mx_angles = numpy.arccos(mx_cos)
+            mx_cos = numpy.sum(mx_vec_o_to_c*mx_vec_o_to_n, axis=-1)
+            mx_angles = numpy.pi - numpy.arccos(mx_cos)
+
             # Matrice des deviations angulaires en prenant a chaque fois
             # le minimum de deviation avec theta_high et theta_low
             mx_theta_rel = numpy.min([
