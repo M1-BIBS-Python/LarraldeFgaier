@@ -358,6 +358,25 @@ class Protein(collections.OrderedDict):
                 for atom in sorted(residual.itervalues(), key=lambda a: a.id):
                     yield atom
 
+    def interface(self, other, mode='nearest', distance=4.5):
+        """An iterator over the interfacing residue couples.
+
+        Yields:
+            `tuple`: an ``(float, Residual, Residual)`` tuple containing
+                the distance from the first to the second residual,
+                and the two residuals, if the distance between them
+                is lower than the given ``distance`` argument.
+        """
+        for c in self.itervalues():
+            for r in c.itervalues():
+                for other_c in other.itervalues():
+                    for other_r in other_c.itervalues():
+                        res_distance = self._CMAP_MODES[mode](r, other_r)
+                        if res_distance < distance:
+                            yield (res_distance, r, other_r)
+
+
+
     def nearest_atom(self, pos):
         """Return the atom nearest to the position ``pos``.
         """
