@@ -79,22 +79,19 @@ class Atom(object):
         """
         return self._read_from_constants(constants.AMINOACID_RADIUS)
 
-    if six.PY3:
-        def itervalues(self):
-            return six.itervalues(self)
-
-        def iteritems(self):
-            return six.iteritems(self)
-
     def distance_to(self, other):
         """Computes the distance to ``other``.
 
         Arguments:
             other (`numpy.ndarray`): the position to compute the
                 distance to (must be array-like of dimension 3)
+
+        Raises:
+            ValueError: when ``other`` is not of dimension 3.
+            TypeError: when ``other`` is not a sequence.
         """
         if len(other) != 3:
-            raise ValueError
+            raise ValueError("Invalid position: {}".format(other))
         return numpy.linalg.norm(self.pos - other)
 
     @method_requires(["name", "residual"], "Cannot find atom residual !")
@@ -112,12 +109,24 @@ class Atom(object):
             Atom 36(13.559, 86.257, 95.222)
             >>> arginine["C"]
             Atom 36(13.559, 86.257, 95.222)
+
+        Raises:
+            ValueError: when no residual is set or when ``other_atom``
+                cannot be found in the residual.
         """
-        return min([
-            atom for atom in self.residual.itervalues()
-                if atom.name.startswith(other_atom)],
-            key=lambda atom: self.distance_to(atom.pos)
-        )
+        try:
+            return min([
+                atom for atom in self.residual.itervalues()
+                    if atom.name.startswith(other_atom)
+                    and atom != self],
+                key=lambda atom: self.distance_to(atom.pos)
+            )
+        except ValueError:
+            err = ValueError(
+                "Could not find atom named '{}' in "
+                "residual {}".format(other_atom, self.residual)
+            )
+            six.raise_from(err, None)
 
     @method_requires(["name", "residual"], "Cannot find atom type !")
     def _read_from_constants(self, table):
@@ -129,4 +138,5 @@ class Atom(object):
             elif self.residual.cter:
                 return table["CTER"][self.name]
             else:
-                raise KeyError("{}, {} ({})".format(self.residual.name, self.name, self.id))
+                err = KeyError("{}, {} ({})".format(self.residual.name, self.name, self.id))
+                six.raise_from(err, None)
