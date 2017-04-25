@@ -6,7 +6,6 @@ from __future__ import division
 import math
 
 from .base import BaseComponent
-from .. import requirements
 
 
 class Fabiola(BaseComponent):

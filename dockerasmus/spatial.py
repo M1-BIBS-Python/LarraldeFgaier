@@ -94,7 +94,7 @@ def apply_transformation_matrix(protein, matrix):
     """
     new_prot = Protein()
     for chain in protein.values():
-        new_prot[chain.id] = new_chain = Chain(chain.id, chain.name)
+        new_prot[chain.id] = Chain(chain.id, chain.name)
         for res in chain.values():
             new_prot[chain.id][res.id] = new_res = Residual(res.id, res.name)
             for atom in res.values():

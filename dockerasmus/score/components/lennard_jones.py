@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 from __future__ import division
 
 from .base import BaseComponent
-from .. import requirements
 
 
 class LennardJones(BaseComponent):

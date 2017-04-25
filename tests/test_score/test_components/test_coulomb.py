@@ -5,10 +5,8 @@ from __future__ import division
 
 import unittest
 import numpy
-import collections
 import warnings
 
-from dockerasmus.pdb import Protein, Chain, Residual, Atom
 from dockerasmus.score import ScoringFunction
 from dockerasmus.score.components import Coulomb
 from dockerasmus.utils.matrices import distance

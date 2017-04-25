@@ -12,9 +12,8 @@ import warnings
 from dockerasmus.pdb import Protein, Chain, Residual, Atom
 from dockerasmus.score import ScoringFunction
 from dockerasmus.score.components import Fabiola
-from dockerasmus.utils.matrices import distance
 
-from ...utils import mock, suppress_tf_log
+from ...utils import mock
 
 
 class TestFabiola(unittest.TestCase):
@@ -103,7 +102,7 @@ class TestFabiola(unittest.TestCase):
         r_lig['N1'] = Atom(0, 3, 0, 5, "N", r_lig)
         r_lig['N2'] = Atom(1, 3, 0, 6, "N", r_lig)
 
-        
+
         c_rec = Chain('A', residuals=collections.OrderedDict([(1, r_rec)]))
         c_lig = Chain('A', residuals=collections.OrderedDict([(2, r_lig)]))
 

@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 import os
 import unittest
 
-from dockerasmus.pdb import Protein, Residual, Atom
+from dockerasmus.pdb import Protein, Atom
 
 from ..utils import DATADIR
 
@@ -50,4 +50,5 @@ class TestContains(TestResidual):
 
     def test_contains_error(self):
         with self.assertRaises(TypeError):
-            [] in self.arginine
+            if [] in self.arginine:
+                pass

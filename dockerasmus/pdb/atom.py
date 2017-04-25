@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 import six
 import numpy
-import functools
 
 from .. import constants
 from ..utils.decorators import method_requires

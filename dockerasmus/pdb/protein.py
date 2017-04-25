@@ -8,7 +8,6 @@ import six
 import copy
 import gzip
 import functools
-import string
 import numpy
 
 from ..utils import iterators
