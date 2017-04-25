@@ -15,7 +15,8 @@ from .utils import DATADIR
 
 class TestArrays(unittest.TestCase):
 
-    def assertArrayAlmostEqual(self, actual, desired, decimal=7):
+    @staticmethod
+    def assertArrayAlmostEqual(actual, desired, decimal=7):
         numpy.testing.assert_almost_equal(actual, desired, decimal=decimal)
 
 

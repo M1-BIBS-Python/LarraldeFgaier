@@ -59,8 +59,7 @@ class BaseComponent(object):
             kwargs = cls._kwargs
         except AttributeError:
             _, kwargs = cls._make_argspec()
-        finally:
-            return kwargs
+        return kwargs
 
     @classmethod
     def args(cls):

@@ -5,7 +5,8 @@ from __future__ import unicode_literals
 from .distance import distance
 
 __all__ = [
-    "epsilon", "distance", "vdw_radius", "charge", "ocn_atoms_positions",
+    "potential_well_depth", "distance", "vdw_radius", "charge",
+    "ocn_atoms_positions",
 ]
 
 
