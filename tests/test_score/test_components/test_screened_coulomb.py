@@ -14,7 +14,7 @@ from dockerasmus.utils.matrices import distance
 
 from ...utils import mock
 
-@unittest.skip('no implemented yet')
+@unittest.skip('not implemented yet')
 class TestScreenedCoulomb(unittest.TestCase):
 
     def setUp(self):

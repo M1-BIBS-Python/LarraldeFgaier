@@ -65,10 +65,10 @@ class Protein(collections.OrderedDict):
 
                 atom = cls._parse_pdb_atom_line(line)
 
-                if not atom['chainID'] in protein:
+                if atom['chainID'] not in protein:
                     protein[atom['chainID']] = Chain(atom['chainID'])
 
-                if not atom['resSeq'] in protein[atom['chainID']]:
+                if atom['resSeq'] not in protein[atom['chainID']]:
                     protein[atom['chainID']][atom['resSeq']] = Residual(atom['resSeq'], atom['resName'])
 
                 protein[atom['chainID']][atom['resSeq']][atom['name']] = Atom(
@@ -305,7 +305,7 @@ class Protein(collections.OrderedDict):
               farthest atoms of the two residuals) or ``'mass_center'``
               (the distance between the mass center of the two residuals).
         """
-        if not mode in self._CMAP_MODES:
+        if mode not in self._CMAP_MODES:
             raise ValueError("Unknown mode: '{}'".format(mode))
         if not isinstance(other, Protein):
             raise TypeError("other must be a Protein,"
@@ -415,7 +415,7 @@ class Protein(collections.OrderedDict):
             for j in range(mx_distance.shape[1]):
                 if mx_distance[i,j] < distance:
                     res_self, res_other = atoms_self[i].residual, atoms_other[j].residual
-                    if not (res_self, res_other) in done:
+                    if (res_self, res_other) not in done:
                         done.add((res_self, res_other))
                         yield res_self, res_other
 
