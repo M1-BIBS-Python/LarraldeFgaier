@@ -61,8 +61,8 @@ class TestProperties(TestProtein):
     def test_atom_charges(self):
         self.assertEqual(list(self.prot.atom_charges()), [-0.0518, -0.1102])
 
+
 class TestMagicMethods(TestProtein):
-    ## TODO: test_getitem
 
     def test_getitem_simple(self):
         self.assertEqual(self.prot2['B'], self.chain_b)
@@ -277,3 +277,17 @@ class TestMethods(TestProtein):
         self.assertEqual(self.prot2.residual(2.0), self.res_2)
         with self.assertRaises(TypeError):
             _ = self.prot2.residual("hi!")
+
+    def test_interface_identical_proteins(self):
+        # Since the 2 proteins are the same,
+        # every residue has a very close interfacing
+        # residue: itself in the other protein !
+        self.assertEqual(
+            list(self.arginine_prot.interface(self.arginine_prot)),
+            [(self.arginine_prot['A'][-3],)*2],
+        )
+
+    def test_interface_othertype(self):
+        with self.assertRaises(TypeError):
+            for r1, r2 in self.prot2.interface(1):
+                pass

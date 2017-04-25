@@ -389,28 +389,35 @@ class Protein(collections.OrderedDict):
                     yield atom
 
     def interface(self, other, distance=4.5):
-        """Find the Residues of ``self`` interfacing with ``other``.
+        """Return couples of residues of ``self`` interfacing with ``other``.
 
-        Return:
-            set - a set containing Residues of ``self`` with at
-                least one Residue closer than ``distance`` to a
-                Residue of ``other``.
+        Yields:
+            tuple - a (`Residual`, `Residual`) couple where the first element
+                is a residue of `self` and the second a residue of `other`
+                only if two or more of their respective aminoacids are closer
+                than ``distance``.
         """
+        if not isinstance(other, Protein):
+            raise TypeError("Invalid type: {}".format(type(other).__name__))
+
         # Reuse the distance matrix computation of dockerasmus.score !
         from ..score.requirements import distance as dist
         mx_distance = dist(self, other)
 
-        # Atoms of self in the same order as self.atom_positions
+        # Atoms of self and other in the same order as
+        # self.atom_positions() and other.atom_position
         atoms_self = list(self.iteratoms())
+        atoms_other = list(other.iteratoms())
 
-        # Create the set
-        residues = set()
+        # Start the iterator
+        done = set()
         for i in range(mx_distance.shape[0]):
             for j in range(mx_distance.shape[1]):
                 if mx_distance[i,j] < distance:
-                    residues.add(atoms_self[i].residual)
-        return residues
-
+                    res_self, res_other = atoms_self[i].residual, atoms_other[j].residual
+                    if not (res_self, res_other) in done:
+                        done.add((res_self, res_other))
+                        yield res_self, res_other
 
 
     def nearest_atom(self, pos):
