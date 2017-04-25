@@ -41,6 +41,9 @@ class Residual(dict):
                     six.text_type.__name__,type(item).__name__)
             )
 
+    def __hash__(self):
+        return hash(hash(frozenset(self)) + hash(self.id) + hash(self.name))
+
     @property
     def cter(self):
         return not self.CTER_ATOMS.isdisjoint(self)

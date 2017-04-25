@@ -388,23 +388,28 @@ class Protein(collections.OrderedDict):
                 for atom in sorted(residual.itervalues(), key=lambda a: a.id):
                     yield atom
 
-    def interface(self, other, mode='nearest', distance=4.5):
-        """An iterator over the interfacing residue couples.
+    def interface(self, other, distance=4.5):
+        """Find the Residues of ``self`` interfacing with ``other``.
 
-        Yields:
-            `tuple`: an ``(float, Residual, Residual)`` tuple containing
-                the distance from the first to the second residual,
-                and the two residuals, if the distance between them
-                is lower than the given ``distance`` argument.
+        Return:
+            set - a set containing Residues of ``self`` with at
+                least one Residue closer than ``distance`` to a
+                Residue of ``other``.
         """
-        pass
-        # for c in self.itervalues():
-        #     for r in c.itervalues():
-        #         for other_c in other.itervalues():
-        #             for other_r in other_c.itervalues():
-        #                 res_distance = self._CMAP_MODES[mode](r, other_r)
-        #                 if res_distance < distance:
-        #                     yield (res_distance, r, other_r)
+        # Reuse the distance matrix computation of dockerasmus.score !
+        from ..score.requirements import distance as dist
+        mx_distance = dist(self, other)
+
+        # Atoms of self in the same order as self.atom_positions
+        atoms_self = list(self.iteratoms())
+
+        # Create the set
+        residues = set()
+        for i in range(mx_distance.shape[0]):
+            for j in range(mx_distance.shape[1]):
+                if mx_distance[i,j] < distance:
+                    residues.add(atoms_self[i].residual)
+        return residues
 
 
 
