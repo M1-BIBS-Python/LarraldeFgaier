@@ -2,7 +2,7 @@ dockerasmus
 =======================================
 *docking itself through university*
 
-|docs| |gl| |build| |coverage| |license|
+|docs| |gl| |build| |coverage| |license| |grade|
 
 .. |docs| image:: http://readthedocs.org/projects/dockerasmus/badge/?version=latest
    :target: http://dockerasmus.readthedocs.io/en/latest/?badge=latest
@@ -19,6 +19,8 @@ dockerasmus
 .. |license| image:: https://img.shields.io/badge/license-GPLv3-blue.svg
    :target: https://choosealicense.com/licenses/gpl-3.0/
 
+.. |grade| image:: https://api.codacy.com/project/badge/Grade/87e03271b04e4154a3b513bddb0d08bc
+   :target: https://www.codacy.com/app/althonos/dockerasmus
 
 
 
