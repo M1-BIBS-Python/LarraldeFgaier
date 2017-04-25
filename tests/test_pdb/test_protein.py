@@ -31,6 +31,22 @@ class TestProtein(unittest.TestCase):
             })
         })
 
+    def setUp(self):
+        ## Custom made protein with elements accessible
+        ## outside of prot.__getitem__
+        self.atom_1 = Atom(0,0,0,1)
+        self.atom_2 = Atom(1,0,0,2)
+        self.atom_3 = Atom(0,1,0,3)
+        self.atom_4 = Atom(0,0,1,4)
+        self.res_1 = Residual(1, atoms={'C1': self.atom_1, 'C2': self.atom_2})
+        self.res_2 = Residual(2, atoms={'C1': self.atom_3})
+        self.res_3 = Residual(3, atoms={'C1': self.atom_4})
+        self.chain_b = Chain('B', residuals={1: self.res_1})
+        self.chain_c = Chain('C', residuals={2: self.res_2})
+        self.chain_d = Chain('D', residuals={3: self.res_3})
+        self.prot2 = Protein(chains={'B': self.chain_b, 'C': self.chain_c,
+                                     'D': self.chain_d})
+
 
 class TestProperties(TestProtein):
 
@@ -47,33 +63,11 @@ class TestProperties(TestProtein):
 class TestMagicMethods(TestProtein):
     ## TODO: test_getitem
 
-    def setUp(self):
-        ## Custom made protein with elements accessible
-        ## outside of prot.__getitem__
-        self.atom_1 = Atom(0,0,0,1)
-        self.atom_2 = Atom(1,0,0,2)
-        self.atom_3 = Atom(0,1,0,3)
-        self.atom_4 = Atom(0,0,1,4)
-        self.res_1 = Residual(1, atoms={'C1': self.atom_1, 'C2': self.atom_2})
-        self.res_2 = Residual(2, atoms={'C1': self.atom_3})
-        self.res_3 = Residual(3, atoms={'C1': self.atom_4})
-        self.chain_b = Chain('B', residuals={1: self.res_1})
-        self.chain_c = Chain('C', residuals={2: self.res_2})
-        self.chain_d = Chain('D', residuals={3: self.res_3})
-        self.prot = Protein(chains={'B': self.chain_b, 'C': self.chain_c,
-                                    'D': self.chain_d})
-
     def test_getitem_simple(self):
-        self.assertEqual(self.prot['B'], self.chain_b)
-        self.assertEqual(self.prot['D'], self.chain_d)
+        self.assertEqual(self.prot2['B'], self.chain_b)
+        self.assertEqual(self.prot2['D'], self.chain_d)
         with self.assertRaises(KeyError):
-            _ = self.prot['A']
-
-    def test_getitem_atom_id(self):
-        self.assertEqual(self.prot[1], self.atom_1)
-        self.assertEqual(self.prot[4], self.atom_4)
-        with self.assertRaises(KeyError):
-            _ = self.prot[40]
+            _ = self.prot2['A']
 
     def test_getitem_wordslice(self):
         prot_1 = Protein(chains=collections.OrderedDict([
@@ -89,10 +83,10 @@ class TestMagicMethods(TestProtein):
             ('B', self.chain_b),
         ]))
 
-        self.assertEqual(self.prot[:], prot_1)
-        self.assertEqual(self.prot[:'D'], prot_2)
-        self.assertEqual(self.prot['C':], prot_3)
-        self.assertEqual(self.prot['B':'C'], prot_4)
+        self.assertEqual(self.prot2[:], prot_1)
+        self.assertEqual(self.prot2[:'D'], prot_2)
+        self.assertEqual(self.prot2['C':], prot_3)
+        self.assertEqual(self.prot2['B':'C'], prot_4)
 
     def test_contains_chain(self):
         self.assertIn(self.arginine_prot['A'], self.arginine_prot)
@@ -120,8 +114,8 @@ class TestMagicMethods(TestProtein):
 
     def test_iadd_protein(self):
         test_prot = Protein()
-        test_prot += self.prot
-        self.assertEqual(set(test_prot), set(self.prot))
+        test_prot += self.prot2
+        self.assertEqual(set(test_prot), set(self.prot2))
 
     def test_iadd_chain(self):
         test_prot = Protein()
@@ -136,7 +130,7 @@ class TestMagicMethods(TestProtein):
     def test_iadd_same_protein(self):
         test_prot = Protein(chains={'B': self.chain_b})
         with self.assertRaises(ValueError):
-            test_prot += self.prot
+            test_prot += self.prot2
 
     def test_iadd_othertype(self):
         test_prot = Protein()
@@ -214,7 +208,6 @@ class TestMethods(TestProtein):
             1,
         )
 
-
     def test_contact_map_mass_center(self):
         self.assertEqual( ## Same mass center
             self.prot.contact_map(self.prot, mode='mass_center')[1,1],
@@ -228,3 +221,27 @@ class TestMethods(TestProtein):
     def test_contact_map_othertype(self):
         with self.assertRaises(TypeError):
             _ = self.prot.contact_map(1)
+
+    def test_atom_int(self):
+        self.assertEqual(self.prot2.atom(1), self.atom_1)
+        self.assertEqual(self.prot2.atom(4), self.atom_4)
+        with self.assertRaises(KeyError):
+            _ = self.prot2.atom(40)
+
+    def test_atom_other(self):
+        self.assertEqual(self.prot2.atom("1"), self.atom_1)
+        self.assertEqual(self.prot2.atom(1.0), self.atom_1)
+        with self.assertRaises(TypeError):
+            _ = self.prot2.atom("hello")
+
+    def test_residual_int(self):
+        self.assertEqual(self.prot2.residual(1), self.res_1)
+        self.assertEqual(self.prot2.residual(3), self.res_3)
+        with self.assertRaises(KeyError):
+            _ = self.prot2.residual(42)
+
+    def test_residual_other(self):
+        self.assertEqual(self.prot2.residual("1"), self.res_1)
+        self.assertEqual(self.prot2.residual(2.0), self.res_2)
+        with self.assertRaises(TypeError):
+            _ = self.prot2.residual("hi!")

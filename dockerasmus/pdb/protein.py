@@ -205,11 +205,6 @@ class Protein(collections.OrderedDict):
                 (k, super(Protein, self).__getitem__(k))
                     for k in iterators.wordrange(start, stop)
             ]))
-        elif isinstance(item, int):
-            atom = next((atom for atom in self.iteratoms() if atom.id==item), None)
-            if atom is None:
-                raise KeyError("Could not find Atom with id: {}".format(item))
-            return atom
         else:
             return super(Protein, self).__getitem__(item)
 
@@ -335,6 +330,32 @@ class Protein(collections.OrderedDict):
 
         return cmap
 
+    def atom(self, atom_id):
+        """Get atom of ``self`` with id ``atom_id``.
+
+        Raises:
+            KeyError: when no Atom has the given id.
+        """
+        atom_id = int(atom_id)
+        atom = next((atom for atom in self.iteratoms() if atom.id==atom_id), None)
+        if atom is None:
+            raise KeyError("Could not find Atom with id: {}".format(atom_id))
+        return atom
+
+    def residual(self, res_id):
+        """Get residual of ``self`` with id ``res_id``.
+
+        Raises:
+            KeyError: when no Residual has the given id.
+        """
+        res_id = int(res_id)
+        res = next((res for chain in self.itervalues()
+                    for res in chain.itervalues() if res.id==res_id), None,
+        )
+        if res is None:
+            raise KeyError("Could not find Residue with id: {}".format(res_id))
+        return res
+
     def copy(self):
         """Return a deep copy of ``self``.
         """
@@ -367,13 +388,14 @@ class Protein(collections.OrderedDict):
                 and the two residuals, if the distance between them
                 is lower than the given ``distance`` argument.
         """
-        for c in self.itervalues():
-            for r in c.itervalues():
-                for other_c in other.itervalues():
-                    for other_r in other_c.itervalues():
-                        res_distance = self._CMAP_MODES[mode](r, other_r)
-                        if res_distance < distance:
-                            yield (res_distance, r, other_r)
+        pass
+        # for c in self.itervalues():
+        #     for r in c.itervalues():
+        #         for other_c in other.itervalues():
+        #             for other_r in other_c.itervalues():
+        #                 res_distance = self._CMAP_MODES[mode](r, other_r)
+        #                 if res_distance < distance:
+        #                     yield (res_distance, r, other_r)
 
 
 
@@ -388,15 +410,27 @@ class Protein(collections.OrderedDict):
     def rmsd(self, other):
         """
         """
+        #TODO: matricial computation
         rmsd, length = 0, 0
         if isinstance(other, Protein):
-            for atom, other_atom in zip(self.iteratoms(), other.iteratoms()):
-                rmsd += numpy.sum((atom.pos - other_atom.pos)**2)
-                length += 1
+            # Compute pairwise RMSD
+            positions_other = other.atom_positions()
+            positions_self = self.atom_positions()
+            length = len(positions_self)
+            if length != len(positions_other):
+                raise ValueError(
+                "'other' does not have the same number of atoms !"
+                )
+            rmsd = numpy.sum((positions_self - positions_other)**2)
         elif isinstance(other, (list, numpy.ndarray)):
-            for atom in self.iteratoms():
-                rmsd += numpy.sum((atom.pos - other)**2)
-                length += 1
+            # Compute reference-wise RMSD
+            if len(other) != 3:
+                raise ValueError(
+                    "Invalid reference position dimension: {}".format(len(other))
+                )
+            vec_distance_squared = (self.atom_positions() - other)**2
+            rmsd = numpy.sum(vec_distance_squared)
+            length = len(vec_distance_squared)
         else:
             raise TypeError("other must be Protein, list or numpy.ndarray,"
                             " not {}".format(type(other).__name__))
