@@ -22,28 +22,27 @@ class TestProtein(unittest.TestCase):
         )
         ## An unrealistic protein, which properties
         ## are easy to compute manually
-        cls.prot = Protein(chains={
-            'A': Chain('A', residuals={
-                1: Residual(1, atoms={
-                    'C1': Atom(0, 0, 0, 1, 'C1'),
-                    'C2': Atom(0, 0, 1, 2, 'C2')
-                })
-            })
-        })
+        res = Residual(1, 'LEU')
+        res['C1'] = Atom(0, 0, 0, 1, 'CA', res)
+        res['C2'] = Atom(0, 0, 1, 2, 'CB', res)
+        cls.prot = Protein(chains={'A': Chain('A', residuals={1:res})})
 
-    def setUp(self):
         ## Custom made protein with elements accessible
         ## outside of prot.__getitem__
-        self.atom_1 = Atom(0,0,0,1)
-        self.atom_2 = Atom(1,0,0,2)
-        self.atom_3 = Atom(0,1,0,3)
-        self.atom_4 = Atom(0,0,1,4)
-        self.res_1 = Residual(1, atoms={'C1': self.atom_1, 'C2': self.atom_2})
-        self.res_2 = Residual(2, atoms={'C1': self.atom_3})
-        self.res_3 = Residual(3, atoms={'C1': self.atom_4})
-        self.chain_b = Chain('B', residuals={1: self.res_1})
-        self.chain_c = Chain('C', residuals={2: self.res_2})
-        self.chain_d = Chain('D', residuals={3: self.res_3})
+        cls.atom_1 = Atom(0,0,0,1)
+        cls.atom_2 = Atom(1,0,0,2)
+        cls.atom_3 = Atom(0,1,0,3)
+        cls.atom_4 = Atom(0,0,1,4)
+        cls.res_1 = Residual(1, atoms={'C1': cls.atom_1, 'C2': cls.atom_2})
+        cls.res_2 = Residual(2, atoms={'C1': cls.atom_3})
+        cls.res_3 = Residual(3, atoms={'C1': cls.atom_4})
+        cls.chain_b = Chain('B', residuals={1: cls.res_1})
+        cls.chain_c = Chain('C', residuals={2: cls.res_2})
+        cls.chain_d = Chain('D', residuals={3: cls.res_3})
+
+    def setUp(self):
+        ## Reset self.prot2 before each test since it can be
+        ## mutated by __iadd__
         self.prot2 = Protein(chains={'B': self.chain_b, 'C': self.chain_c,
                                      'D': self.chain_d})
 
@@ -59,6 +58,8 @@ class TestProperties(TestProtein):
     def test_radius(self):
         self.assertEqual(self.prot.radius, .5)
 
+    def test_atom_charges(self):
+        self.assertEqual(list(self.prot.atom_charges()), [-0.0518, -0.1102])
 
 class TestMagicMethods(TestProtein):
     ## TODO: test_getitem
@@ -112,6 +113,28 @@ class TestMagicMethods(TestProtein):
         with self.assertRaises(TypeError):
             _ = object() in self.arginine_prot
 
+    def test_add_protein(self):
+        prot = Protein() + self.prot2
+        self.assertEqual(set(prot), set(self.prot2))
+
+    def test_add_chain(self):
+        prot = Protein() + self.chain_b
+        self.assertEqual(set(prot), {'B'})
+
+    def test_add_same_chain(self):
+        with self.assertRaises(ValueError):
+            _ = Protein() + self.chain_b + self.chain_b
+
+    def test_add_same_protein(self):
+        with self.assertRaises(ValueError):
+            _ = self.prot2 + self.prot2
+
+    def test_iadd_othertype(self):
+        with self.assertRaises(TypeError):
+            _ = self.prot2 + 1
+        with self.assertRaises(TypeError):
+            _ = self.prot2 + ["a", "b", "c"]
+
     def test_iadd_protein(self):
         test_prot = Protein()
         test_prot += self.prot2
@@ -131,15 +154,24 @@ class TestMagicMethods(TestProtein):
         test_prot = Protein(chains={'B': self.chain_b})
         with self.assertRaises(ValueError):
             test_prot += self.prot2
-
+        self.atom_1 = Atom(0,0,0,1)
+        self.atom_2 = Atom(1,0,0,2)
+        self.atom_3 = Atom(0,1,0,3)
+        self.atom_4 = Atom(0,0,1,4)
+        self.res_1 = Residual(1, atoms={'C1': self.atom_1, 'C2': self.atom_2})
+        self.res_2 = Residual(2, atoms={'C1': self.atom_3})
+        self.res_3 = Residual(3, atoms={'C1': self.atom_4})
+        self.chain_b = Chain('B', residuals={1: self.res_1})
+        self.chain_c = Chain('C', residuals={2: self.res_2})
+        self.chain_d = Chain('D', residuals={3: self.res_3})
+        self.prot2 = Protein(chains={'B': self.chain_b, 'C': self.chain_c,
+                                     'D': self.chain_d})
     def test_iadd_othertype(self):
         test_prot = Protein()
         with self.assertRaises(TypeError):
             test_prot += 1
         with self.assertRaises(TypeError):
             test_prot += "a"
-
-
 
 
 class TestMethods(TestProtein):
@@ -228,7 +260,7 @@ class TestMethods(TestProtein):
         with self.assertRaises(KeyError):
             _ = self.prot2.atom(40)
 
-    def test_atom_other(self):
+    def test_atom_othertype(self):
         self.assertEqual(self.prot2.atom("1"), self.atom_1)
         self.assertEqual(self.prot2.atom(1.0), self.atom_1)
         with self.assertRaises(TypeError):
@@ -240,7 +272,7 @@ class TestMethods(TestProtein):
         with self.assertRaises(KeyError):
             _ = self.prot2.residual(42)
 
-    def test_residual_other(self):
+    def test_residual_othertype(self):
         self.assertEqual(self.prot2.residual("1"), self.res_1)
         self.assertEqual(self.prot2.residual(2.0), self.res_2)
         with self.assertRaises(TypeError):

@@ -191,12 +191,6 @@ class Protein(collections.OrderedDict):
             >>> barstar = complex[u'D':]
             >>> sorted(barstar.keys())
             [u'D', u'E', u'F']
-            >>> complex[1]
-            Atom 1(16.783, 48.812, 26.447)
-            >>> barstar[1]
-            Traceback (most recent call last):
-               ...
-            KeyError: u'Could not find Atom with id: 1'
         """
         if isinstance(item, slice):
             stop = item.stop or iterators.nth(iterators.wordrange(max(self.keys())), 1)
@@ -336,6 +330,14 @@ class Protein(collections.OrderedDict):
         Raises:
             KeyError: when no Atom has the given id.
         """
+        try:
+            atom_id = int(atom_id)
+        except ValueError:
+            six.raise_from(
+                TypeError("Invalid type: {}".format(type(atom_id).__name__)),
+                None
+            )
+
         atom_id = int(atom_id)
         atom = next((atom for atom in self.iteratoms() if atom.id==atom_id), None)
         if atom is None:
@@ -348,7 +350,14 @@ class Protein(collections.OrderedDict):
         Raises:
             KeyError: when no Residual has the given id.
         """
-        res_id = int(res_id)
+        try:
+            res_id = int(res_id)
+        except ValueError:
+            six.raise_from(
+                TypeError("Invalid type: {}".format(type(res_id).__name__)),
+                None
+            )
+
         res = next((res for chain in self.itervalues()
                     for res in chain.itervalues() if res.id==res_id), None,
         )
