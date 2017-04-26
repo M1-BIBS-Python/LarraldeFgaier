@@ -51,6 +51,8 @@ test:3.6:
 codecov:
   stage: cover
   image: python:alpine
+  variables:
+    CI_BUILD_REPO: $CI_REPOSITORY_URL
   script:
   - apk add git --no-cache
   - pip install -U codecov coverage
