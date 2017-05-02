@@ -189,6 +189,9 @@ intersphinx_mapping = {
     'http://docs.scipy.org/doc/numpy/': None,
     'https://docs.scipy.org/doc/scipy/reference/': None,
     'http://deeplearning.net/software/theano/': None,
+    'http://six.readthedocs.io/': None,
+    'http://setuptools.readthedocs.io/en/latest/': None,
+    'https://pip.pypa.io/en/stable/': None,
 }
 
 # Group members by their respective type

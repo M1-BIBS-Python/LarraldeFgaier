@@ -2,7 +2,7 @@ dockerasmus
 =======================================
 *docking itself through university*
 
-|docs| |gl| |build| |coverage| |license| |grade|
+|version| |docs| |pyversions| |gl| |build| |coverage| |license| |grade| |wheel|
 
 .. |docs| image:: http://readthedocs.org/projects/dockerasmus/badge/?version=latest
    :target: http://dockerasmus.readthedocs.io/en/latest/?badge=latest
@@ -20,7 +20,17 @@ dockerasmus
    :target: https://choosealicense.com/licenses/gpl-3.0/
 
 .. |grade| image:: https://api.codacy.com/project/badge/Grade/87e03271b04e4154a3b513bddb0d08bc
-   :target: https://www.codacy.com/app/althonos/dockerasmus 
+   :target: https://www.codacy.com/app/althonos/dockerasmus
+
+.. |version| image:: https://img.shields.io/pypi/v/dockerasmus.svg
+  :target: https://pypi.python.org/pypi/dockerasmus
+
+.. |pyversions| image:: https://img.shields.io/pypi/pyversions/dockerasmus.svg
+  :target: https://pypi.python.org/pypi/dockerasmus
+
+.. |wheel| image:: https://img.shields.io/pypi/wheel/dockerasmus.svg
+  :target: https://pypi.python.org/pypi/dockerasmus
+
 
 
 ``dockerasmus`` is a version-agnostic Python module that was created
@@ -37,7 +47,7 @@ every scoring component can be rewritten with any library supporting
 .. toctree::
    :maxdepth: 1
 
-   examples
+   setup
    supported
    api/index
 
