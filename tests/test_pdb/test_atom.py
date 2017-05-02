@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 import os
 import unittest
 
-from dockerasmus.pdb import Atom, Residual, Protein
+from dockerasmus.pdb import Atom, Residue, Protein
 
 from ..utils import DATADIR
 
@@ -14,7 +14,7 @@ class AtomTestCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        arginine = Residual(id=1, name="ARG")
+        arginine = Residue(id=1, name="ARG")
         arginine["CA"] = cls.carbon = Atom(0, 0, 0, 1, "CA", arginine)
         cls.oxygen = Atom(1, 1, 1, 2, "O")
         cls.unnamed = Atom(2, 2, 2, 3)
@@ -41,7 +41,7 @@ class TestProperties(AtomTestCase):
         with self.assertRaises(ValueError):
             _ = self.unnamed.radius
 
-    def test_radius_no_residual(self):
+    def test_radius_no_residue(self):
         with self.assertRaises(ValueError):
             _ = self.oxygen.radius
 
@@ -52,7 +52,7 @@ class TestProperties(AtomTestCase):
         with self.assertRaises(ValueError):
             _ = self.unnamed.charge
 
-    def test_charge_no_residual(self):
+    def test_charge_no_residue(self):
         with self.assertRaises(ValueError):
             _ = self.oxygen.charge
 
@@ -100,7 +100,7 @@ class TestMethods(AtomTestCase):
             self.arginine['O'],
         )
 
-    def test_nearest_no_residual(self):
+    def test_nearest_no_residue(self):
         with self.assertRaises(ValueError):
             _ = self.oxygen.nearest("C")
 

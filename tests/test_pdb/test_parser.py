@@ -23,7 +23,7 @@ class TestParserOnArginine(unittest.TestCase):
     def test_chains(self):
         self.assertEqual(set(self.arginine_prot.keys()), {'A'})
 
-    def test_residuals(self):
+    def test_residues(self):
         self.assertEqual(set(self.arginine_prot['A'].keys()), {-3})
 
     def test_atoms(self):

@@ -8,26 +8,26 @@ import numpy
 from .atom import Atom
 
 
-class Residual(dict):
+class Residue(dict):
     __slots__ = ("id", "_name")
 
     CTER_ATOMS = frozenset({"OXT"})
     NTER_ATOMS = frozenset({"H1", "H2", "H3"})
 
     def __init__(self, id, name=None, atoms=None):
-        super(Residual, self).__init__(atoms or {})
+        super(Residue, self).__init__(atoms or {})
         self.id = id
         self._name = name
 
     def __contains__(self, item):
-        """Check if `item` is contained in the residual.
+        """Check if `item` is contained in the residue.
 
         Arguments:
             item: either an atom_id (`int`) or an `Atom` object
-                to check if present within the residual.
+                to check if present within the residue.
         """
         if isinstance(item, six.text_type):
-            return super(Residual, self).__contains__(item)
+            return super(Residue, self).__contains__(item)
         elif isinstance(item, Atom):
             return any(item == atom for atom in self.itervalues())
         elif isinstance(item, int):
@@ -35,7 +35,7 @@ class Residual(dict):
 
         else:
             raise TypeError(
-                "'in <Residual>' requires Atom or {}"
+                "'in <Residue>' requires Atom or {}"
                 " as left operand, not {}".format(
                     six.text_type.__name__,type(item).__name__)
             )
@@ -49,16 +49,16 @@ class Residual(dict):
 
     @property
     def mass(self):
-        """The mass of the residual.
+        """The mass of the residue.
 
         Computed as sum of the masses of the non-hydrogen
-        atoms of the residual.
+        atoms of the residue.
         """
         return sum(atom.mass for atom in self.itervalues())
 
     @property
     def mass_center(self):
-        """The position of the mass center of the residual.
+        """The position of the mass center of the residue.
 
         Computed as the barycenter of the positions of the
         atoms weighted by their atomic masses.
@@ -85,14 +85,14 @@ class Residual(dict):
             return six.iteritems(self)
 
     def distance_to(self, other):
-        """The distance of the mass center of the residual to ``other``
+        """The distance of the mass center of the residue to ``other``
         """
         if len(other) != 3:
             raise ValueError("") #TODO
         return numpy.linalg.norm(self.mass_center - other)
 
     def rmsd(self, ref):
-        """The RMSD of the atoms of the residual, with ref as reference.
+        """The RMSD of the atoms of the residue, with ref as reference.
 
         Arguments:
             ref (`numpy.ndarray` or `list`): the x,y,z

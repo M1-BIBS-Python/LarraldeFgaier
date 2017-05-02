@@ -10,9 +10,9 @@ from ..utils.decorators import method_requires
 
 
 class Atom(object):
-    __slots__ = ("id", "name", "x", "y", "z", "residual")
+    __slots__ = ("id", "name", "x", "y", "z", "residue")
 
-    def __init__(self, x, y, z, id, name=None, residual=None):
+    def __init__(self, x, y, z, id, name=None, residue=None):
         """Instantiate a new `Atom` object.
 
         Arguments:
@@ -23,9 +23,9 @@ class Atom(object):
             name (`str`): the name of the atom element ('C',
                 'CA', 'O', etc.). Giving a name to the Atom is
                 required to access to the `mass` property.
-            residual (`Residual`): a reference to the residual
+            residue (`Residue`): a reference to the residue
                 this atom is part of. Giving a reference to
-                the residual of the Atom is required to access
+                the residue of the Atom is required to access
                 the `charge`, `epsilon` and `radius` properties.
         """
         self.id = id
@@ -33,7 +33,7 @@ class Atom(object):
         self.x = x
         self.y = y
         self.z = z
-        self.residual = residual
+        self.residue = residue
 
     def __repr__(self):
         return "Atom {}({}, {}, {})".format(self.id, self.x, self.y, self.z)
@@ -93,9 +93,9 @@ class Atom(object):
             raise ValueError("Invalid position: {}".format(other))
         return numpy.linalg.norm(self.pos - other)
 
-    @method_requires(["name", "residual"], "Cannot find atom residual !")
+    @method_requires(["name", "residue"], "Cannot find atom residue !")
     def nearest(self, other_atom):
-        """The nearest ``other_atom`` in ``self.residual``.
+        """The nearest ``other_atom`` in ``self.residue``.
 
         Arguments:
             other_atom (`str`): the name of the other atom
@@ -110,12 +110,12 @@ class Atom(object):
             Atom 36(13.559, 86.257, 95.222)
 
         Raises:
-            ValueError: when no residual is set or when ``other_atom``
-                cannot be found in the residual.
+            ValueError: when no residue is set or when ``other_atom``
+                cannot be found in the residue.
         """
         try:
             return min([
-                atom for atom in self.residual.itervalues()
+                atom for atom in self.residue.itervalues()
                     if atom.name.startswith(other_atom)
                     and atom != self],
                 key=lambda atom: self.distance_to(atom.pos)
@@ -123,19 +123,19 @@ class Atom(object):
         except ValueError:
             err = ValueError(
                 "Could not find atom named '{}' in "
-                "residual {}".format(other_atom, self.residual)
+                "residue {}".format(other_atom, self.residue)
             )
             six.raise_from(err, None)
 
-    @method_requires(["name", "residual"], "Cannot find atom type !")
+    @method_requires(["name", "residue"], "Cannot find atom type !")
     def _read_from_constants(self, table):
         try:
-            return table[self.residual.name][self.name]
+            return table[self.residue.name][self.name]
         except KeyError:
-            if self.residual.nter:
+            if self.residue.nter:
                 return table["NTER"][self.name]
-            elif self.residual.cter:
+            elif self.residue.cter:
                 return table["CTER"][self.name]
             else:
-                err = KeyError("{}, {} ({})".format(self.residual.name, self.name, self.id))
+                err = KeyError("{}, {} ({})".format(self.residue.name, self.name, self.id))
                 six.raise_from(err, None)

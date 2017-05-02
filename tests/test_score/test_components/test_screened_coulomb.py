@@ -7,7 +7,7 @@ import unittest
 import numpy
 import collections
 
-from dockerasmus.pdb import Protein, Chain, Residual, Atom
+from dockerasmus.pdb import Protein, Chain, Residue, Atom
 from dockerasmus.score import ScoringFunction
 from dockerasmus.score.components import ScreenedCoulomb
 from dockerasmus.utils.matrices import distance
@@ -43,11 +43,11 @@ class TestScreenedCoulomb(unittest.TestCase):
         c = Atom(0, 1, 0, 3)
         d = Atom(1, 1, 0, 4)
 
-        r1 = Residual(1, atoms=collections.OrderedDict([('A', a), ('B', b)]))
-        r2 = Residual(2, atoms=collections.OrderedDict([('C', c), ('D', d)]))
+        r1 = Residue(1, atoms=collections.OrderedDict([('A', a), ('B', b)]))
+        r2 = Residue(2, atoms=collections.OrderedDict([('C', c), ('D', d)]))
 
-        c1 = Chain('A', residuals=collections.OrderedDict([(1, r1)]))
-        c2 = Chain('A', residuals=collections.OrderedDict([(2, r2)]))
+        c1 = Chain('A', residues=collections.OrderedDict([(1, r1)]))
+        c2 = Chain('A', residues=collections.OrderedDict([(2, r2)]))
 
         prot1 = Protein(chains=collections.OrderedDict([('A', c1)]))
         prot2 = Protein(chains=collections.OrderedDict([('A', c2)]))

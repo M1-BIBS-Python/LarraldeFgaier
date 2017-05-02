@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import numpy
-from .pdb import Atom, Chain, Protein, Residual
+from .pdb import Atom, Chain, Protein, Residue
 
 
 def TranslationMatrix(dx=0, dy=0, dz=0):
@@ -96,11 +96,11 @@ def apply_transformation_matrix(protein, matrix):
     for chain in protein.values():
         new_prot[chain.id] = Chain(chain.id, chain.name)
         for res in chain.values():
-            new_prot[chain.id][res.id] = new_res = Residual(res.id, res.name)
+            new_prot[chain.id][res.id] = new_res = Residue(res.id, res.name)
             for atom in res.values():
                 old_pos = numpy.append(atom.pos, [1]) # 4 coords vector
                 new_pos = matrix.dot(old_pos)[:3]
                 new_prot[chain.id][res.id][atom.name] = Atom(
-                    *new_pos, id=atom.id, name=atom.name, residual=new_res
+                    *new_pos, id=atom.id, name=atom.name, residue=new_res
                 )
     return new_prot

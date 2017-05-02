@@ -15,10 +15,10 @@ Chain (**dockerasmus.pdb.chain**)
    :members:
 
 
-Residual (**dockerasmus.pdb.residual**)
----------------------------------------
+Residue (**dockerasmus.pdb.residue**)
+-------------------------------------
 
-.. autoclass:: dockerasmus.pdb.Residual
+.. autoclass:: dockerasmus.pdb.Residue
    :members:
 
 

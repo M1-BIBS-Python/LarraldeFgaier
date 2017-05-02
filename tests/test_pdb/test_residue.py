@@ -10,7 +10,7 @@ from dockerasmus.pdb import Protein, Atom
 from ..utils import DATADIR
 
 
-class TestResidual(unittest.TestCase):
+class TestResidue(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -19,7 +19,7 @@ class TestResidual(unittest.TestCase):
         )['A'][-3]
 
 
-class TestProperties(TestResidual):
+class TestProperties(TestResidue):
 
     def test_mass_center(self):
         # Actual mass center were calculated manually using AARG
@@ -29,7 +29,7 @@ class TestProperties(TestResidual):
         self.assertAlmostEqual(self.arginine.mass_center[2], 91.9005718, 6)
 
 
-class TestContains(TestResidual):
+class TestContains(TestResidue):
 
     def test_contains_id(self):
         self.assertIn(32, self.arginine)

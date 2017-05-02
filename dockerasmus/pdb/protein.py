@@ -12,7 +12,7 @@ import numpy
 
 from ..utils import iterators
 from .chain import Chain
-from .residual import Residual
+from .residue import Residue
 from .atom import Atom
 
 
@@ -68,7 +68,7 @@ class Protein(collections.OrderedDict):
                     protein[atom['chainID']] = Chain(atom['chainID'])
 
                 if atom['resSeq'] not in protein[atom['chainID']]:
-                    protein[atom['chainID']][atom['resSeq']] = Residual(atom['resSeq'], atom['resName'])
+                    protein[atom['chainID']][atom['resSeq']] = Residue(atom['resSeq'], atom['resName'])
 
                 protein[atom['chainID']][atom['resSeq']][atom['name']] = Atom(
                     atom['x'], atom['y'], atom['z'], atom['serial'], atom['name'],
@@ -172,13 +172,13 @@ class Protein(collections.OrderedDict):
     def __contains__(self, item):
         if isinstance(item, six.text_type):
             return super(Protein, self).__contains__(item)
-        elif isinstance(item, (Residual, Atom)):
+        elif isinstance(item, (Residue, Atom)):
             return any(item in chain for chain in self.itervalues())
         elif isinstance(item, Chain):
             return super(Protein, self).__contains__(item.id)
         else:
             raise TypeError(
-                "'in <Protein>' requires Chain, Residual, Atom or unicode"
+                "'in <Protein>' requires Chain, Residue, Atom or unicode"
                 " as left operand, not {}".format(type(item).__name__)
             )
 
@@ -206,7 +206,7 @@ class Protein(collections.OrderedDict):
         """The mass of the protein.
 
         Warning:
-            Computed as the sum of the masses of the residuals
+            Computed as the sum of the masses of the residues
             of the chain (it does not take the masses of the atoms
             in the peptidic bound into account).
         """
@@ -229,7 +229,7 @@ class Protein(collections.OrderedDict):
         of the whole protein.
 
         Warning:
-            Uses `Protein.mass`, so only the atoms on the residuals
+            Uses `Protein.mass`, so only the atoms on the residues
             of each aminoacid are used for the computation.
         """
         mass = self.mass
@@ -249,8 +249,8 @@ class Protein(collections.OrderedDict):
         return max(
             atom.distance_to(origin)
                 for chain in self.itervalues()
-                    for residual in chain.itervalues()
-                        for atom in residual.itervalues()
+                    for residue in chain.itervalues()
+                        for atom in residue.itervalues()
         )
 
     def atom_charges(self):
@@ -290,19 +290,19 @@ class Protein(collections.OrderedDict):
         return self._atom_radius
 
     def contact_map(self, other, mode='nearest'):
-        """Return a 2D contact map between residuals of ``self`` and ``other``.
+        """Return a 2D contact map between residues of ``self`` and ``other``.
 
         Arguments:
             other (`Protein`): the other protein with which to create
-                a contact map (chains/residuals/atoms must have the same
+                a contact map (chains/residues/atoms must have the same
                 names in both proteins)
 
         Keyword Arguments:
             mode (`str`): how to compute the contact map. Available modes are:
               ``'nearest'`` (the distance between the two closest atoms of
-              the two residuals), ``'farthest'`` (the distance between the two
-              farthest atoms of the two residuals) or ``'mass_center'``
-              (the distance between the mass center of the two residuals).
+              the two residues), ``'farthest'`` (the distance between the two
+              farthest atoms of the two residues) or ``'mass_center'``
+              (the distance between the mass center of the two residues).
         """
         if mode not in self._CMAP_MODES:
             raise ValueError("Unknown mode: '{}'".format(mode))
@@ -343,11 +343,11 @@ class Protein(collections.OrderedDict):
             raise KeyError("Could not find Atom with id: {}".format(atom_id))
         return atom
 
-    def residual(self, res_id):
-        """Get residual of ``self`` with id ``res_id``.
+    def residue(self, res_id):
+        """Get residue of ``self`` with id ``res_id``.
 
         Raises:
-            KeyError: when no Residual has the given id.
+            KeyError: when no Residue has the given id.
         """
         try:
             res_id = int(res_id)
@@ -369,8 +369,8 @@ class Protein(collections.OrderedDict):
         """
         return Protein(self.id, self.name, collections.OrderedDict([
             (chain.id, Chain(chain.id, chain.name, collections.OrderedDict([
-                (residual.id, copy.deepcopy(residual))
-                    for residual in chain.itervalues()
+                (residue.id, copy.deepcopy(residue))
+                    for residue in chain.itervalues()
             ])))
                 for chain in self.itervalues()
         ]))
@@ -380,18 +380,18 @@ class Protein(collections.OrderedDict):
 
         Yields:
             `Atom`: every atom of the protein, ordered by
-            the id of their chain and the id of their residual.
+            the id of their chain and the id of their residue.
         """
         for chain in self.itervalues():
-            for residual in chain.itervalues():
-                for atom in sorted(residual.itervalues(), key=lambda a: a.id):
+            for residue in chain.itervalues():
+                for atom in sorted(residue.itervalues(), key=lambda a: a.id):
                     yield atom
 
     def interface(self, other, distance=4.5):
         """Return couples of residues of ``self`` interfacing with ``other``.
 
         Yields:
-            tuple - a (`Residual`, `Residual`) couple where the first element
+            tuple - a (`Residue`, `Residue`) couple where the first element
                 is a residue of `self` and the second a residue of `other`
                 only if two or more of their respective aminoacids are closer
                 than ``distance``.
@@ -413,7 +413,7 @@ class Protein(collections.OrderedDict):
         for i in range(mx_distance.shape[0]):
             for j in range(mx_distance.shape[1]):
                 if mx_distance[i,j] < distance:
-                    res_self, res_other = atoms_self[i].residual, atoms_other[j].residual
+                    res_self, res_other = atoms_self[i].residue, atoms_other[j].residue
                     if (res_self, res_other) not in done:
                         done.add((res_self, res_other))
                         yield res_self, res_other

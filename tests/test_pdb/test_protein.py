@@ -6,7 +6,7 @@ import os
 import unittest
 import collections
 
-from dockerasmus.pdb import Protein, Chain, Atom, Residual
+from dockerasmus.pdb import Protein, Chain, Atom, Residue
 from dockerasmus.constants import ATOMIC_MASSES
 
 from ..utils import DATADIR
@@ -22,10 +22,10 @@ class TestProtein(unittest.TestCase):
         )
         ## An unrealistic protein, which properties
         ## are easy to compute manually
-        res = Residual(1, 'LEU')
+        res = Residue(1, 'LEU')
         res['C1'] = Atom(0, 0, 0, 1, 'CA', res)
         res['C2'] = Atom(0, 0, 1, 2, 'CB', res)
-        cls.prot = Protein(chains={'A': Chain('A', residuals={1:res})})
+        cls.prot = Protein(chains={'A': Chain('A', residues={1:res})})
 
         ## Custom made protein with elements accessible
         ## outside of prot.__getitem__
@@ -33,12 +33,12 @@ class TestProtein(unittest.TestCase):
         cls.atom_2 = Atom(1,0,0,2)
         cls.atom_3 = Atom(0,1,0,3)
         cls.atom_4 = Atom(0,0,1,4)
-        cls.res_1 = Residual(1, atoms={'C1': cls.atom_1, 'C2': cls.atom_2})
-        cls.res_2 = Residual(2, atoms={'C1': cls.atom_3})
-        cls.res_3 = Residual(3, atoms={'C1': cls.atom_4})
-        cls.chain_b = Chain('B', residuals={1: cls.res_1})
-        cls.chain_c = Chain('C', residuals={2: cls.res_2})
-        cls.chain_d = Chain('D', residuals={3: cls.res_3})
+        cls.res_1 = Residue(1, atoms={'C1': cls.atom_1, 'C2': cls.atom_2})
+        cls.res_2 = Residue(2, atoms={'C1': cls.atom_3})
+        cls.res_3 = Residue(3, atoms={'C1': cls.atom_4})
+        cls.chain_b = Chain('B', residues={1: cls.res_1})
+        cls.chain_c = Chain('C', residues={2: cls.res_2})
+        cls.chain_d = Chain('D', residues={3: cls.res_3})
 
     def setUp(self):
         ## Reset self.prot2 before each test since it can be
@@ -93,9 +93,9 @@ class TestMagicMethods(TestProtein):
         self.assertIn(self.arginine_prot['A'], self.arginine_prot)
         self.assertNotIn(Chain('B'), self.arginine_prot)
 
-    def test_contains_residual(self):
+    def test_contains_residue(self):
         self.assertIn(self.arginine_prot['A'][-3], self.arginine_prot)
-        self.assertNotIn(Residual(-4), self.arginine_prot)
+        self.assertNotIn(Residue(-4), self.arginine_prot)
 
     def test_contains_atom(self):
         self.assertIn(self.arginine_prot['A'][-3]['O'], self.arginine_prot)
@@ -158,12 +158,12 @@ class TestMagicMethods(TestProtein):
         self.atom_2 = Atom(1,0,0,2)
         self.atom_3 = Atom(0,1,0,3)
         self.atom_4 = Atom(0,0,1,4)
-        self.res_1 = Residual(1, atoms={'C1': self.atom_1, 'C2': self.atom_2})
-        self.res_2 = Residual(2, atoms={'C1': self.atom_3})
-        self.res_3 = Residual(3, atoms={'C1': self.atom_4})
-        self.chain_b = Chain('B', residuals={1: self.res_1})
-        self.chain_c = Chain('C', residuals={2: self.res_2})
-        self.chain_d = Chain('D', residuals={3: self.res_3})
+        self.res_1 = Residue(1, atoms={'C1': self.atom_1, 'C2': self.atom_2})
+        self.res_2 = Residue(2, atoms={'C1': self.atom_3})
+        self.res_3 = Residue(3, atoms={'C1': self.atom_4})
+        self.chain_b = Chain('B', residues={1: self.res_1})
+        self.chain_c = Chain('C', residues={2: self.res_2})
+        self.chain_d = Chain('D', residues={3: self.res_3})
         self.prot2 = Protein(chains={'B': self.chain_b, 'C': self.chain_c,
                                      'D': self.chain_d})
     def test_iadd_othertype(self):
@@ -266,17 +266,17 @@ class TestMethods(TestProtein):
         with self.assertRaises(TypeError):
             _ = self.prot2.atom("hello")
 
-    def test_residual_int(self):
-        self.assertEqual(self.prot2.residual(1), self.res_1)
-        self.assertEqual(self.prot2.residual(3), self.res_3)
+    def test_residue_int(self):
+        self.assertEqual(self.prot2.residue(1), self.res_1)
+        self.assertEqual(self.prot2.residue(3), self.res_3)
         with self.assertRaises(KeyError):
-            _ = self.prot2.residual(42)
+            _ = self.prot2.residue(42)
 
-    def test_residual_othertype(self):
-        self.assertEqual(self.prot2.residual("1"), self.res_1)
-        self.assertEqual(self.prot2.residual(2.0), self.res_2)
+    def test_residue_othertype(self):
+        self.assertEqual(self.prot2.residue("1"), self.res_1)
+        self.assertEqual(self.prot2.residue(2.0), self.res_2)
         with self.assertRaises(TypeError):
-            _ = self.prot2.residual("hi!")
+            _ = self.prot2.residue("hi!")
 
     def test_interface_identical_proteins(self):
         # Since the 2 proteins are the same,

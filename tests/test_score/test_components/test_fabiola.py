@@ -9,7 +9,7 @@ import numpy
 import collections
 import warnings
 
-from dockerasmus.pdb import Protein, Chain, Residual, Atom
+from dockerasmus.pdb import Protein, Chain, Residue, Atom
 from dockerasmus.score import ScoringFunction
 from dockerasmus.score.components import Fabiola
 
@@ -92,19 +92,19 @@ class TestFabiola(unittest.TestCase):
 
     def test_wrapped(self):
 
-        r_rec = Residual(1)
+        r_rec = Residue(1)
         r_rec['C1'] = Atom(0, 0, 0, 1, 'C', r_rec)
         r_rec['C2'] = Atom(2, 0, 0, 2, "C", r_rec)
         r_rec['O1'] = Atom(0, 1, 0, 3, "O", r_rec)
         r_rec['O2'] = Atom(3, 1, 0, 4, "O", r_rec)
 
-        r_lig = Residual(2)
+        r_lig = Residue(2)
         r_lig['N1'] = Atom(0, 3, 0, 5, "N", r_lig)
         r_lig['N2'] = Atom(1, 3, 0, 6, "N", r_lig)
 
 
-        c_rec = Chain('A', residuals=collections.OrderedDict([(1, r_rec)]))
-        c_lig = Chain('A', residuals=collections.OrderedDict([(2, r_lig)]))
+        c_rec = Chain('A', residues=collections.OrderedDict([(1, r_rec)]))
+        c_lig = Chain('A', residues=collections.OrderedDict([(2, r_lig)]))
 
         rec = Protein(chains=collections.OrderedDict([('A', c_rec)]))
         lig = Protein(chains=collections.OrderedDict([('A', c_lig)]))
