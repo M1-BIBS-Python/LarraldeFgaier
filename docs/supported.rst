@@ -39,6 +39,12 @@ Partially supported
 MXNet
 -----
 
+`mxnet` is a deep-learning library developed that supports both symbolic and
+imperative programming in order to perform efficient computations. It is
+maintained by the developers previously behind `minerva`, `cxxnet` and
+`purine2`.
+
+
 Tensorflow
 ----------
 
