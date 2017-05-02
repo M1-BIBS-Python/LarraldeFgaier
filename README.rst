@@ -61,7 +61,7 @@ using the scoring function defined by `Cornell et al
 
     # Call the scoring function on the barnase (receptor)
     # and the barstar (ligand)
-    scoring_function(barnase, barstar)  # -22.47...
+    scoring_function(barnase, barstar)  # -84.94...
 
 
 API
