@@ -2,10 +2,17 @@ dockerasmus
 =======================================
 *docking itself through university*
 
-|docs| |gl| |build| |coverage| |license| |grade|
+|version| |docs| |pyversions| |gl| |build| |coverage| |license| |grade| |wheel|
+
+
+.. |version| image:: https://img.shields.io/pypi/v/dockerasmus.svg 
+   :target: https://pypi.python.org/pypi/dockerasmus
 
 .. |docs| image:: http://readthedocs.org/projects/dockerasmus/badge/?version=latest
    :target: http://dockerasmus.readthedocs.io/en/latest/?badge=latest
+
+.. |pyversions| image:: https://img.shields.io/pypi/pyversions/dockerasmus.svg   
+   :target: https://pypi.python.org/pypi/dockerasmus
 
 .. |build| image:: https://gitlab.com/althonos/dockerasmus/badges/master/build.svg
    :target: https://gitlab.com/althonos/dockerasmus/pipelines?scope=branches
@@ -22,6 +29,8 @@ dockerasmus
 .. |grade| image:: https://api.codacy.com/project/badge/Grade/87e03271b04e4154a3b513bddb0d08bc
    :target: https://www.codacy.com/app/althonos/dockerasmus
 
+.. |wheel| image:: https://img.shields.io/pypi/wheel/dockerasmus.svg   
+   :target: https://pypi.python.org/pypi/dockerasmus
 
 
 Introduction
